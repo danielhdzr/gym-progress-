@@ -31,7 +31,7 @@ La app se publica en GitHub Pages con:
 npm run deploy
 ```
 
-Esto corre las pruebas, compila y sube `dist/` a la rama `gh-pages`. La primera vez, en el repo de GitHub ve a **Settings → Pages → Build and deployment**, elige **Deploy from a branch**, rama **gh-pages** y carpeta **/ (root)**.
+Esto corre las pruebas, compila y sube `dist/` a la rama `gh-pages`. GitHub activa Pages automáticamente con esa rama y el sitio se actualiza en ~1 minuto.
 
 Después abre `https://danielhdzr.github.io/gym-progress-/` en el celular y elige **Agregar a pantalla de inicio** (Safari en iPhone) o **Instalar app** (Chrome en Android).
 
