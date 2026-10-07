@@ -6,6 +6,7 @@ import { fmtClock, fmtDuration } from '../lib/format'
 import { NumInput } from './NumInput'
 import { ExercisePicker } from './ExercisePicker'
 import { newEntry } from '../lib/workout'
+import { useDialog } from './Dialog'
 
 /** Sobrevive a cambiar de pestaña (el componente se desmonta). */
 let savedRestEnd: number | null = null
@@ -18,6 +19,7 @@ interface Props {
 
 export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
   const { state, update } = useStore()
+  const dialog = useDialog()
   const [picking, setPicking] = useState(false)
   const [restEnd, setRestEnd] = useState<number | null>(() => savedRestEnd)
   const [now, setNow] = useState(() => Date.now())
@@ -89,14 +91,19 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
           onRemoveSet={() =>
             setEntries((entries) => entries.map((e, i) => (i === ei ? { ...e, sets: e.sets.slice(0, -1) } : e)))
           }
-          onRemove={() => {
-            if (confirm('¿Quitar este ejercicio del entreno?')) setEntries((entries) => entries.filter((_, i) => i !== ei))
+          onRemove={async () => {
+            if (await dialog.confirm({ message: '¿Quitar este ejercicio del entreno?', confirmLabel: 'Quitar', danger: true })) setEntries((entries) => entries.filter((_, i) => i !== ei))
           }}
         />
       ))}
 
       <button className="secondary full" onClick={() => setPicking(true)}>+ Agregar ejercicio</button>
-      <button className="danger-link" onClick={() => confirm('¿Descartar este entreno? Se perderá lo registrado.') && onDiscard()}>
+      <button className="danger-link" onClick={async () => {
+          if (await dialog.confirm({ message: '¿Descartar este entreno? Se perderá lo registrado.', confirmLabel: 'Descartar', danger: true })) {
+            setRestEnd(null)
+            onDiscard()
+          }
+        }}>
         Descartar entreno
       </button>
 

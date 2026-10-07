@@ -1,8 +1,10 @@
 import { useStore } from '../lib/store'
 import { fmtDate, fmtDuration } from '../lib/format'
+import { useDialog } from './Dialog'
 
 export function HistoryScreen() {
   const { state, update } = useStore()
+  const dialog = useDialog()
   const nameOf = (id: string) => state.exercises.find((e) => e.id === id)?.name ?? '—'
   const workouts = [...state.workouts].sort((a, b) => b.startedAt.localeCompare(a.startedAt))
 
@@ -35,8 +37,8 @@ export function HistoryScreen() {
           ))}
           <button
             className="danger-link"
-            onClick={() => {
-              if (confirm('¿Eliminar este entreno del historial?'))
+            onClick={async () => {
+              if (await dialog.confirm({ message: '¿Eliminar este entreno del historial?', confirmLabel: 'Eliminar', danger: true }))
                 update((s) => ({ ...s, workouts: s.workouts.filter((x) => x.id !== w.id) }))
             }}
           >

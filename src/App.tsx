@@ -4,6 +4,7 @@ import { TrainScreen } from './components/TrainScreen'
 import { HistoryScreen } from './components/HistoryScreen'
 import { ProgressScreen } from './components/ProgressScreen'
 import { SettingsScreen } from './components/SettingsScreen'
+import { DialogProvider } from './components/Dialog'
 
 const TABS = [
   { id: 'train', label: 'Entrenar', icon: '🏋️' },
@@ -49,7 +50,9 @@ function Shell() {
 export default function App() {
   return (
     <StoreProvider>
-      <Shell />
+      <DialogProvider>
+        <Shell />
+      </DialogProvider>
     </StoreProvider>
   )
 }

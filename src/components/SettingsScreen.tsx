@@ -3,9 +3,11 @@ import type { Exercise } from '../types'
 import { parseState, useStore } from '../lib/store'
 import { defaultState } from '../lib/defaults'
 import { NumInput } from './NumInput'
+import { useDialog } from './Dialog'
 
 export function SettingsScreen() {
   const { state, update } = useStore()
+  const dialog = useDialog()
   const fileRef = useRef<HTMLInputElement>(null)
 
   const editExercise = (id: string, patch: Partial<Exercise>) =>
@@ -23,11 +25,15 @@ export function SettingsScreen() {
   const importData = async (file: File) => {
     try {
       const next = parseState(await file.text())
-      if (confirm(`Esto reemplaza tus datos actuales con ${next.workouts.length} entrenos del respaldo. ¿Continuar?`)) {
+      const ok = await dialog.confirm({
+        message: `Esto reemplaza tus datos actuales con ${next.workouts.length} entrenos del respaldo. ¿Continuar?`,
+        confirmLabel: 'Importar',
+      })
+      if (ok) {
         update(() => next)
       }
     } catch (err) {
-      alert(`No se pudo importar: ${(err as Error).message}`)
+      await dialog.alert(`No se pudo importar: ${(err as Error).message}`)
     }
   }
 
@@ -90,7 +96,10 @@ export function SettingsScreen() {
         />
         <button
           className="danger-link"
-          onClick={() => confirm('¿Borrar TODOS tus datos? Esto no se puede deshacer.') && update(() => defaultState())}
+          onClick={async () => {
+            if (await dialog.confirm({ message: '¿Borrar TODOS tus datos? Esto no se puede deshacer.', confirmLabel: 'Borrar todo', danger: true }))
+              update(() => defaultState())
+          }}
         >
           Borrar todos los datos
         </button>

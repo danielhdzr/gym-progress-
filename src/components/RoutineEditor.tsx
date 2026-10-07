@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { Routine } from '../types'
 import { useStore } from '../lib/store'
 import { ExercisePicker } from './ExercisePicker'
+import { useDialog } from './Dialog'
 
 interface Props {
   routine: Routine
@@ -12,6 +13,7 @@ interface Props {
 
 export function RoutineEditor({ routine, onSave, onDelete, onClose }: Props) {
   const { state } = useStore()
+  const dialog = useDialog()
   const [draft, setDraft] = useState(routine)
   const [picking, setPicking] = useState(false)
   const exists = state.routines.some((r) => r.id === routine.id)
@@ -64,7 +66,9 @@ export function RoutineEditor({ routine, onSave, onDelete, onClose }: Props) {
 
       <button className="secondary full" onClick={() => setPicking(true)}>+ Agregar ejercicio</button>
       {exists && (
-        <button className="danger-link" onClick={() => confirm(`¿Eliminar la rutina “${routine.name}”?`) && onDelete()}>
+        <button className="danger-link" onClick={async () => {
+            if (await dialog.confirm({ message: `¿Eliminar la rutina “${routine.name}”?`, confirmLabel: 'Eliminar', danger: true })) onDelete()
+          }}>
           Eliminar rutina
         </button>
       )}

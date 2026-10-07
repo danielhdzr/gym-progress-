@@ -5,9 +5,11 @@ import { finishWorkout, startWorkout } from '../lib/workout'
 import { fmtDate, fmtDuration } from '../lib/format'
 import { ActiveWorkout } from './ActiveWorkout'
 import { RoutineEditor } from './RoutineEditor'
+import { useDialog } from './Dialog'
 
 export function TrainScreen() {
   const { state, update } = useStore()
+  const dialog = useDialog()
   const [editing, setEditing] = useState<Routine | null>(null)
   const [summary, setSummary] = useState<{ workout: Workout; prs: string[] } | null>(null)
 
@@ -18,11 +20,20 @@ export function TrainScreen() {
       <ActiveWorkout
         workout={state.active}
         onDiscard={() => update((s) => ({ ...s, active: null }))}
-        onFinish={() => {
+        onFinish={async () => {
           const active = state.active
           if (!active) return
           const result = finishWorkout(active, state.workouts)
-          if (!result.workout.entries.length && !confirm('No marcaste ninguna serie. ¿Terminar sin guardar?')) return
+          if (
+            !result.workout.entries.length &&
+            !(await dialog.confirm({
+              message: 'No marcaste ninguna serie como hecha (✓), así que no hay nada que guardar. ¿Terminar de todos modos?',
+              confirmLabel: 'Terminar sin guardar',
+              cancelLabel: 'Seguir entrenando',
+              danger: true,
+            }))
+          )
+            return
           update((s) => ({
             ...s,
             active: null,
