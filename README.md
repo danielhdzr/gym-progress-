@@ -25,9 +25,15 @@ npm run build    # genera dist/
 
 ## Usarla en el celular
 
-1. Sube el repo a GitHub y activa **Settings → Pages → Source: GitHub Actions**.
-2. Cada push a `main` despliega en `https://<tu-usuario>.github.io/<repo>/`.
-3. Abre esa URL en el celular y elige **Agregar a pantalla de inicio** (Safari en iPhone) o **Instalar app** (Chrome en Android).
+La app se publica en GitHub Pages con:
+
+```bash
+npm run deploy
+```
+
+Esto corre las pruebas, compila y sube `dist/` a la rama `gh-pages`. La primera vez, en el repo de GitHub ve a **Settings → Pages → Build and deployment**, elige **Deploy from a branch**, rama **gh-pages** y carpeta **/ (root)**.
+
+Después abre `https://danielhdzr.github.io/gym-progress-/` en el celular y elige **Agregar a pantalla de inicio** (Safari en iPhone) o **Instalar app** (Chrome en Android).
 
 ## Publicar en App Store / Play Store (más adelante)
 
