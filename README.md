@@ -2,6 +2,21 @@
 
 App web (PWA) para registrar tus entrenos y **progresar con sobrecarga progresiva**. En cada sesión te dice qué peso y cuántas reps intentar según lo que hiciste la última vez.
 
+### 👉 [Abrir la app](https://danielhdzr.github.io/gym-progress-/) · 📖 [Guía de uso e instalación](GUIA-DE-USO.md)
+
+## 📲 Instalación rápida
+
+Gratis, sin cuenta y funciona sin internet. Tus datos se quedan en tu teléfono.
+
+| 🍎 iPhone | 🤖 Android |
+|---|---|
+| 1. Abre [el enlace](https://danielhdzr.github.io/gym-progress-/) en **Safari** | 1. Abre [el enlace](https://danielhdzr.github.io/gym-progress-/) en **Chrome** |
+| 2. Toca **Compartir** ⬆️ | 2. Toca el menú **⋮** |
+| 3. Toca **Agregar a pantalla de inicio** | 3. Toca **Instalar app** |
+| 4. Ábrela siempre **desde el ícono** | 4. Ábrela desde tu pantalla de inicio |
+
+Instrucciones detalladas, consejos para sacarle provecho, respaldo de datos y preguntas frecuentes: **[GUIA-DE-USO.md](GUIA-DE-USO.md)**.
+
 ## Funciones
 
 - **Sugerencias de progresión** (doble progresión): mismo peso y +1 rep hasta llegar al tope del rango en todas las series; después sube el peso. Si fallas el mínimo dos sesiones seguidas, sugiere un deload de −10%.
@@ -27,7 +42,7 @@ npm test         # pruebas de la lógica de progresión
 npm run build    # genera dist/
 ```
 
-## Usarla en el celular
+## Publicar una nueva versión
 
 La app se publica en GitHub Pages con:
 
@@ -36,8 +51,6 @@ npm run deploy
 ```
 
 Esto corre las pruebas, compila y sube `dist/` a la rama `gh-pages`. GitHub activa Pages automáticamente con esa rama y el sitio se actualiza en ~1 minuto.
-
-Después abre `https://danielhdzr.github.io/gym-progress-/` en el celular y elige **Agregar a pantalla de inicio** (Safari en iPhone) o **Instalar app** (Chrome en Android).
 
 ## Publicar en App Store / Play Store (más adelante)
 
