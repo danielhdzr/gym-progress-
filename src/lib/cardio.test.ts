@@ -5,6 +5,8 @@ import {
   fmtDurationClock,
   fmtPace,
   pace,
+  fmtSpeed,
+  speedKmh,
   pauseTimer,
   records,
   resumeTimer,
@@ -28,6 +30,12 @@ describe('ritmo y formato', () => {
     expect(fmtPace(8.5)).toBe('8:30 /km')
     expect(fmtPace(5.999)).toBe('6:00 /km')
     expect(fmtPace(null)).toBe('—')
+  })
+
+  it('calcula la velocidad promedio en km/h', () => {
+    expect(speedKmh({ distanceKm: 5, durationMin: 27 })).toBeCloseTo(11.11, 2)
+    expect(fmtSpeed(speedKmh({ distanceKm: 2.5, durationMin: 30 }))).toBe('5.0 km/h')
+    expect(fmtSpeed(speedKmh({ distanceKm: 3, durationMin: 0 }))).toBe('—')
   })
 
   it('formatea la duración como reloj', () => {

@@ -11,6 +11,13 @@ export const cardioLabel = (t: CardioType) => CARDIO_TYPES.find((x) => x.id === 
 export const pace = (s: Pick<CardioSession, 'distanceKm' | 'durationMin'>) =>
   s.distanceKm > 0 && s.durationMin > 0 ? s.durationMin / s.distanceKm : null
 
+/** Velocidad promedio en km/h, o null si no hay tiempo. */
+export const speedKmh = (s: Pick<CardioSession, 'distanceKm' | 'durationMin'>) =>
+  s.distanceKm > 0 && s.durationMin > 0 ? s.distanceKm / (s.durationMin / 60) : null
+
+/** 11.11 → "11.1 km/h" */
+export const fmtSpeed = (kmh: number | null) => (kmh === null || !Number.isFinite(kmh) ? '—' : `${kmh.toFixed(1)} km/h`)
+
 /** 8.5 → "8:30 /km" */
 export function fmtPace(minPerKm: number | null) {
   if (minPerKm === null || !Number.isFinite(minPerKm)) return '—'

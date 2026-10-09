@@ -32,7 +32,7 @@ Instrucciones detalladas, consejos para sacarle provecho, respaldo de datos y pr
 - **Calculadora de discos y calentamiento**: discos por lado para cada peso y una rampa de calentamiento (barra, 40/60/80 %), según tu barra y tus discos.
 - **Peso corporal** con gráfica de evolución.
 - **Ejercicios por repeticiones, tiempo o distancia**: por ejemplo plancha en segundos o paseo del granjero en metros, con su propia progresión (+5 s / +5 m).
-- **Cardio**: caminatas y carreras con cronómetro (sigue contando aunque cierres la app), registro manual, ritmo por km, meta semanal de km, récords y gráfica de km por semana.
+- **Cardio**: caminatas y carreras con cronómetro (sigue contando aunque cierres la app), registro manual, ritmo (min/km) y velocidad (km/h), meta semanal de km, récords y gráfica de km por semana.
 - **Saludo y mensajes de ánimo personalizados** según tu constancia: racha de semanas, entrenos de la semana, récords e hitos (1, 10, 25, 50 y 100 entrenos).
 - **Funciona sin internet**, y los datos se guardan en el dispositivo. Puedes exportar e importar un respaldo en JSON.
 

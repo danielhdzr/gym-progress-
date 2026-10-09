@@ -91,10 +91,10 @@ En la pestaña **Cardio** registras tus caminatas y carreras.
 
 **Sin cronómetro:** toca **"+ Registrar manualmente"** y anota distancia, tiempo y fecha.
 
-La app calcula tu **ritmo** (minutos por km) y te muestra:
+La app calcula tu **ritmo** (minutos por km) y tu **velocidad promedio** (km/h), y te muestra:
 - **Esta semana:** km, salidas y tiempo total, comparado con la semana pasada.
 - **Meta semanal:** toca **"+ Meta"** y define cuántos km quieres recorrer por semana.
-- **Récords** de caminata y de carrera por separado: distancia más larga, más tiempo y mejor ritmo (solo en recorridos de 1 km o más).
+- **Récords** de caminata y de carrera por separado: distancia más larga, más tiempo y la más rápida (solo en recorridos de 1 km o más).
 - **Gráfica** de km por semana de las últimas 8 semanas.
 
 Toca cualquier registro del historial para editarlo o eliminarlo.

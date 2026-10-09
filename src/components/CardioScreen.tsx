@@ -8,10 +8,12 @@ import {
   fmtDurationClock,
   fmtKm,
   fmtPace,
+  fmtSpeed,
   pace,
   pauseTimer,
   records,
   resumeTimer,
+  speedKmh,
   startTimer,
   timerElapsedMs,
   weekSummary,
@@ -62,7 +64,7 @@ export function CardioScreen() {
         <section className="card summary">
           <h2>{saved.prs.length ? '¡Nuevo récord! 🏆' : `¡${cardioLabel(saved.session.type).label} registrada! ${cardioLabel(saved.session.type).icon}`}</h2>
           <p>
-            {fmtKm(saved.session.distanceKm)} · {fmtDurationClock(saved.session.durationMin)} · {fmtPace(pace(saved.session))}
+            {fmtKm(saved.session.distanceKm)} · {fmtDurationClock(saved.session.durationMin)} · {fmtPace(pace(saved.session))} · {fmtSpeed(speedKmh(saved.session))}
           </p>
           {saved.prs.length > 0 && <ul>{saved.prs.map((p) => <li key={p}>{p}</li>)}</ul>}
           <button className="ghost" onClick={() => setSaved(null)}>Cerrar</button>
@@ -95,7 +97,7 @@ export function CardioScreen() {
               <span className="grow">
                 <strong>{fmtKm(s.distanceKm)}</strong> · {fmtDurationClock(s.durationMin)}
                 <span className="muted small block">
-                  {fmtDate(s.date)} · {fmtPace(pace(s))}
+                  {fmtDate(s.date)} · {fmtPace(pace(s))} · {fmtSpeed(speedKmh(s))}
                   {s.note && ` · “${s.note}”`}
                 </span>
               </span>
@@ -284,8 +286,8 @@ function RecordsCard({ type }: { type: CardioType }) {
       )}
       {r.bestPace && (
         <div className="history-line">
-          <span>Mejor ritmo</span>
-          <span>{fmtPace(pace(r.bestPace))} <span className="muted small">{fmtShortDate(r.bestPace.date)}</span></span>
+          <span>Más rápida</span>
+          <span>{fmtPace(pace(r.bestPace))} <span className="muted small">({fmtSpeed(speedKmh(r.bestPace))}) {fmtShortDate(r.bestPace.date)}</span></span>
         </div>
       )}
     </section>
@@ -342,7 +344,7 @@ function CardioForm({ draft, onClose, onSave }: { draft: Draft; onClose: () => v
               <NumInput ariaLabel="Segundos" placeholder="0" value={sec} onChange={(s) => setDuration(min, Math.min(59, s))} />
             </label>
           </div>
-          <p className="pace-preview">Ritmo: <strong>{fmtPace(pace(d))}</strong></p>
+          <p className="pace-preview">Ritmo: <strong>{fmtPace(pace(d))}</strong> · Velocidad: <strong>{fmtSpeed(speedKmh(d))}</strong></p>
           <label>
             Nota (opcional)
             <input value={d.note ?? ''} placeholder="Ej. ruta del parque, con subidas" onChange={(e) => setD({ ...d, note: e.target.value })} />
