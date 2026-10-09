@@ -191,7 +191,7 @@ export function SettingsScreen() {
         </button>
       </section>
 
-      <p className="muted small center">Gym Progress · v0.6</p>
+      <p className="muted small center">Gym Progress · v0.7</p>
 
       {editingEx && (
         <div className="sheet-backdrop" onClick={() => setEditingEx(null)}>

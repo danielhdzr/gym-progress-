@@ -5,6 +5,7 @@ import { fmtDate, fmtDuration, toYmd, withLocalDate } from '../lib/format'
 import { startWorkout } from '../lib/workout'
 import { useDialog } from './Dialog'
 import { fmtSet, metricOf } from '../lib/metric'
+import { fmtKcal, workoutKcal } from '../lib/calories'
 import { WorkoutLogEditor } from './WorkoutLogEditor'
 
 export function HistoryScreen() {
@@ -61,6 +62,7 @@ export function HistoryScreen() {
                 {fmtDate(w.startedAt)}
                 {w.finishedAt && ` · ${fmtDuration(new Date(w.finishedAt).getTime() - new Date(w.startedAt).getTime())}`}
                 {` · ${w.entries.reduce((n, e) => n + e.sets.length, 0)} series`}
+                {workoutKcal(w, state.bodyweight) !== null && ` · ${fmtKcal(workoutKcal(w, state.bodyweight))}`}
               </span>
             </div>
           </summary>

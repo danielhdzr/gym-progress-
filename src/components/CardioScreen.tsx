@@ -16,11 +16,13 @@ import {
   speedKmh,
   startTimer,
   timerElapsedMs,
+  weekStart,
   weekSummary,
   weeklyKm,
 } from '../lib/cardio'
 import { fmtDate, fmtShortDate, toYmd, withLocalDate } from '../lib/format'
 import { LineChart } from './LineChart'
+import { cardioKcal, fmtKcal } from '../lib/calories'
 import { NumInput } from './NumInput'
 import { useDialog } from './Dialog'
 
@@ -65,6 +67,7 @@ export function CardioScreen() {
           <h2>{saved.prs.length ? '¡Nuevo récord! 🏆' : `¡${cardioLabel(saved.session.type).label} registrada! ${cardioLabel(saved.session.type).icon}`}</h2>
           <p>
             {fmtKm(saved.session.distanceKm)} · {fmtDurationClock(saved.session.durationMin)} · {fmtPace(pace(saved.session))} · {fmtSpeed(speedKmh(saved.session))}
+            {cardioKcal(saved.session, state.bodyweight) !== null && ` · 🔥 ${fmtKcal(cardioKcal(saved.session, state.bodyweight))}`}
           </p>
           {saved.prs.length > 0 && <ul>{saved.prs.map((p) => <li key={p}>{p}</li>)}</ul>}
           <button className="ghost" onClick={() => setSaved(null)}>Cerrar</button>
@@ -98,6 +101,7 @@ export function CardioScreen() {
                 <strong>{fmtKm(s.distanceKm)}</strong> · {fmtDurationClock(s.durationMin)}
                 <span className="muted small block">
                   {fmtDate(s.date)} · {fmtPace(pace(s))} · {fmtSpeed(speedKmh(s))}
+                  {cardioKcal(s, state.bodyweight) !== null && ` · ${fmtKcal(cardioKcal(s, state.bodyweight))}`}
                   {s.note && ` · “${s.note}”`}
                 </span>
               </span>
@@ -209,6 +213,10 @@ function WeekCard() {
   const goal = state.cardioGoalKm
   const weeks = weeklyKm(state.cardio)
   const pct = goal ? Math.min(100, (week.km / goal) * 100) : 0
+  const thisWeek = weekStart(Date.now())
+  const weekKcal = state.cardio
+    .filter((s) => weekStart(s.date) === thisWeek)
+    .reduce((n, s) => n + (cardioKcal(s, state.bodyweight) ?? 0), 0)
 
   return (
     <section className="card">
@@ -230,6 +238,7 @@ function WeekCard() {
           <span className="muted small">tiempo</span>
         </div>
       </div>
+      {weekKcal > 0 && <p className="small center">🔥 {fmtKcal(weekKcal)} quemadas en cardio esta semana</p>}
 
       {goal > 0 && (
         <>
@@ -295,13 +304,14 @@ function RecordsCard({ type }: { type: CardioType }) {
 }
 
 function CardioForm({ draft, onClose, onSave }: { draft: Draft; onClose: () => void; onSave: (d: Draft) => void }) {
-  const { update } = useStore()
+  const { state, update } = useStore()
   const dialog = useDialog()
   const [d, setD] = useState(draft)
   const totalSec = Math.round(d.durationMin * 60)
   const [min, sec] = [Math.floor(totalSec / 60), totalSec % 60]
   const setDuration = (m: number, s: number) => setD({ ...d, durationMin: m + s / 60 })
   const valid = d.distanceKm > 0 && d.durationMin > 0
+  const kcalPreview = cardioKcal({ ...d, id: d.id ?? '' }, state.bodyweight)
   const isEdit = !!draft.id
 
   return (
@@ -344,7 +354,11 @@ function CardioForm({ draft, onClose, onSave }: { draft: Draft; onClose: () => v
               <NumInput ariaLabel="Segundos" placeholder="0" value={sec} onChange={(s) => setDuration(min, Math.min(59, s))} />
             </label>
           </div>
-          <p className="pace-preview">Ritmo: <strong>{fmtPace(pace(d))}</strong> · Velocidad: <strong>{fmtSpeed(speedKmh(d))}</strong></p>
+          <p className="pace-preview">
+            Ritmo: <strong>{fmtPace(pace(d))}</strong> · Velocidad: <strong>{fmtSpeed(speedKmh(d))}</strong>
+            {kcalPreview !== null && <> · 🔥 <strong>{fmtKcal(kcalPreview)}</strong></>}
+          </p>
+          {!state.bodyweight.length && <p className="muted small">🔥 Registra tu peso corporal en <strong>Progreso</strong> para estimar las calorías.</p>}
           <label>
             Nota (opcional)
             <input value={d.note ?? ''} placeholder="Ej. ruta del parque, con subidas" onChange={(e) => setD({ ...d, note: e.target.value })} />

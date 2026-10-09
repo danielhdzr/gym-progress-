@@ -33,6 +33,7 @@ Instrucciones detalladas, consejos para sacarle provecho, respaldo de datos y pr
 - **Peso corporal** con gráfica de evolución.
 - **Ejercicios por repeticiones, tiempo o distancia**: por ejemplo plancha en segundos o paseo del granjero en metros, con su propia progresión (+5 s / +5 m).
 - **Cardio**: caminatas y carreras con cronómetro (sigue contando aunque cierres la app), registro manual, ritmo (min/km) y velocidad (km/h), meta semanal de km, récords y gráfica de km por semana.
+- **Calorías aproximadas** de pesas y cardio con METs (Compendio de Actividades Físicas), usando tu peso corporal registrado.
 - **Saludo y mensajes de ánimo personalizados** según tu constancia: racha de semanas, entrenos de la semana, récords e hitos (1, 10, 25, 50 y 100 entrenos).
 - **Funciona sin internet**, y los datos se guardan en el dispositivo. Puedes exportar e importar un respaldo en JSON.
 

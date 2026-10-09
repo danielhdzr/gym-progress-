@@ -8,6 +8,7 @@ import { RoutineEditor } from './RoutineEditor'
 import { useDialog } from './Dialog'
 import { useRestTimer } from './RestTimer'
 import { finishMessage, greeting, homeMessage } from '../lib/motivation'
+import { fmtKcal, workoutKcal } from '../lib/calories'
 
 export function TrainScreen() {
   const { state, update } = useStore()
@@ -97,7 +98,9 @@ export function TrainScreen() {
           <p className="muted">
             {summary.workout.name} · {fmtDuration(new Date(summary.workout.finishedAt!).getTime() - new Date(summary.workout.startedAt).getTime())} ·{' '}
             {summary.workout.entries.reduce((n, e) => n + e.sets.length, 0)} series
+            {workoutKcal(summary.workout, state.bodyweight) !== null && ` · 🔥 ${fmtKcal(workoutKcal(summary.workout, state.bodyweight))}`}
           </p>
+          {!state.bodyweight.length && <p className="muted small">🔥 Registra tu peso corporal en <strong>Progreso</strong> para estimar las calorías.</p>}
           {summary.prs.length > 0 ? (
             <>
               <p><strong>🏆 Nuevos récords:</strong></p>

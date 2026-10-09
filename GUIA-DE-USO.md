@@ -101,6 +101,15 @@ Toca cualquier registro del historial para editarlo o eliminarlo.
 
 > La app no usa GPS: la distancia la anotas tú. Así funciona igual en caminadora y no gasta batería.
 
+### 🔥 Calorías aproximadas
+La app estima las kcal de cada entreno de pesas y de cada caminata o carrera con la fórmula estándar **MET × peso × horas**:
+- **Pesas:** MET 3.5 por la duración del entreno (incluye descansos).
+- **Caminata y carrera:** el MET sube con tu velocidad. Correr rápido quema más por minuto que caminar.
+
+Para verlas, **registra tu peso corporal** en **Progreso → Peso corporal**. Se usa el peso más cercano a la fecha de cada entreno.
+
+> Es una **estimación** (±20–30 %): no conoce tu frecuencia cardiaca ni tu composición corporal. Úsala para comparar tus semanas, no como un número exacto.
+
 ---
 
 ## 🚀 Cómo sacarle el máximo provecho
