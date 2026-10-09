@@ -45,6 +45,8 @@ export interface Workout {
 
 export interface Settings {
   restSeconds: number
+  /** Pitido al terminar el descanso */
+  restSound: boolean
   /** Peso de la barra (kg) para la calculadora de discos y el calentamiento */
   barWeight: number
   /** Discos disponibles (kg, uno de cada lado) */

@@ -84,6 +84,7 @@ export const ALL_PLATES = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5]
 
 export const DEFAULT_SETTINGS: Settings = {
   restSeconds: 120,
+  restSound: true,
   barWeight: 20,
   plates: [25, 20, 15, 10, 5, 2.5, 1.25],
 }

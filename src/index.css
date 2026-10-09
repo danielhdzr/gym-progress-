@@ -285,3 +285,9 @@ input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1
 .field.inline .num { max-width: 90px; }
 .bw-input { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
 .history-line .icon { padding: 2px 6px 2px 10px; font-size: 0.8rem; }
+
+/* Interruptor (sonido) */
+.switch { flex-shrink: 0; width: 50px; height: 30px; padding: 0; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); position: relative; }
+.switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: var(--muted); transition: transform 0.15s; }
+.switch.on { background: var(--accent); border-color: var(--accent); }
+.switch.on::after { transform: translateX(20px); background: var(--accent-ink); }

@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import type { ExerciseLog, Workout } from '../types'
 import { useStore } from '../lib/store'
-import { fmtClock, fmtDuration } from '../lib/format'
+import { fmtDuration } from '../lib/format'
 import { ExercisePicker } from './ExercisePicker'
 import { ExerciseCard } from './ExerciseCard'
 import { newEntry, patchSet } from '../lib/workout'
 import { useDialog } from './Dialog'
-
-/** Sobrevive a cambiar de pestaña (el componente se desmonta). */
-let savedRestEnd: number | null = null
+import { useRestTimer } from './RestTimer'
 
 interface Props {
   workout: Workout
@@ -20,25 +18,14 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
   const { state, update } = useStore()
   const dialog = useDialog()
   const [picking, setPicking] = useState(false)
-  const [restEnd, setRestEnd] = useState<number | null>(() => savedRestEnd)
+  const rest = useRestTimer()
+  // Reloj del encabezado (duración del entreno)
   const [now, setNow] = useState(() => Date.now())
 
   useEffect(() => {
-    savedRestEnd = restEnd
-  }, [restEnd])
-
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 500)
+    const t = setInterval(() => setNow(Date.now()), 15000)
     return () => clearInterval(t)
   }, [])
-
-  const restLeft = restEnd ? (restEnd - now) / 1000 : 0
-  useEffect(() => {
-    if (restEnd && restLeft <= 0) {
-      navigator.vibrate?.([200, 100, 200])
-      setRestEnd(null)
-    }
-  }, [restEnd, restLeft])
 
   const setEntries = (fn: (entries: ExerciseLog[]) => ExerciseLog[]) =>
     update((s) => (s.active ? { ...s, active: { ...s.active, entries: fn(s.active.entries) } } : s))
@@ -46,11 +33,7 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
   const toggleDone = (ei: number, si: number) => {
     const set = workout.entries[ei].sets[si]
     setEntries((es) => patchSet(es, ei, si, { done: !set.done }))
-    if (!set.done) {
-      const t = Date.now()
-      setNow(t)
-      setRestEnd(t + state.settings.restSeconds * 1000)
-    }
+    if (!set.done) rest.start()
   }
 
   const doneSets = workout.entries.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0)
@@ -82,22 +65,13 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
         className="danger-link"
         onClick={async () => {
           if (await dialog.confirm({ message: '¿Descartar este entreno? Se perderá lo registrado.', confirmLabel: 'Descartar', danger: true })) {
-            setRestEnd(null)
+            rest.stop()
             onDiscard()
           }
         }}
       >
         Descartar entreno
       </button>
-
-      {restEnd && restLeft > 0 && (
-        <div className="rest-bar">
-          <span>Descanso</span>
-          <strong>{fmtClock(restLeft)}</strong>
-          <button className="ghost" onClick={() => setRestEnd((r) => (r ?? Date.now()) + 30000)}>+30 s</button>
-          <button className="ghost" onClick={() => setRestEnd(null)}>Saltar</button>
-        </div>
-      )}
 
       {picking && (
         <ExercisePicker

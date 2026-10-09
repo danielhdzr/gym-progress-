@@ -6,10 +6,12 @@ import { fmtDate, fmtDuration } from '../lib/format'
 import { ActiveWorkout } from './ActiveWorkout'
 import { RoutineEditor } from './RoutineEditor'
 import { useDialog } from './Dialog'
+import { useRestTimer } from './RestTimer'
 
 export function TrainScreen() {
   const { state, update } = useStore()
   const dialog = useDialog()
+  const rest = useRestTimer()
   const [editing, setEditing] = useState<Routine | null>(null)
   const [summary, setSummary] = useState<{ workout: Workout; prs: string[] } | null>(null)
 
@@ -34,6 +36,7 @@ export function TrainScreen() {
             }))
           )
             return
+          rest.stop()
           update((s) => ({
             ...s,
             active: null,

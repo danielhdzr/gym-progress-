@@ -4,6 +4,7 @@ import { parseState, useStore } from '../lib/store'
 import { ALL_PLATES, defaultState } from '../lib/defaults'
 import { NumInput } from './NumInput'
 import { useDialog } from './Dialog'
+import { playRestDone, unlockAudio } from '../lib/sound'
 
 export function SettingsScreen() {
   const { state, update } = useStore()
@@ -54,6 +55,31 @@ export function SettingsScreen() {
             </button>
           ))}
         </div>
+      </section>
+
+      <section className="card">
+        <div className="card-head">
+          <div>
+            <h3>Sonido al terminar el descanso</h3>
+            <p className="muted small">En iPhone no suena si el interruptor de silencio está activado.</p>
+          </div>
+          <button
+            className={`switch ${state.settings.restSound ? 'on' : ''}`}
+            role="switch"
+            aria-checked={state.settings.restSound}
+            aria-label="Sonido al terminar el descanso"
+            onClick={() => update((s) => ({ ...s, settings: { ...s.settings, restSound: !s.settings.restSound } }))}
+          />
+        </div>
+        <button
+          className="secondary"
+          onClick={() => {
+            unlockAudio()
+            playRestDone()
+          }}
+        >
+          🔊 Probar sonido
+        </button>
       </section>
 
       <section className="card">
@@ -143,7 +169,7 @@ export function SettingsScreen() {
         </button>
       </section>
 
-      <p className="muted small center">Gym Progress · v0.2</p>
+      <p className="muted small center">Gym Progress · v0.3</p>
     </div>
   )
 }

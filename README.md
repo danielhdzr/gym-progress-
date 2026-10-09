@@ -6,7 +6,7 @@ App web (PWA) para registrar tus entrenos y **progresar con sobrecarga progresiv
 
 - **Sugerencias de progresión** (doble progresión): mismo peso y +1 rep hasta llegar al tope del rango en todas las series; después sube el peso. Si fallas el mínimo dos sesiones seguidas, sugiere un deload de −10%.
 - **Registro rápido**: las series vienen precargadas con la sugerencia; solo ajustas y marcas ✓.
-- **Temporizador de descanso** automático al marcar una serie (vibra al terminar).
+- **Temporizador de descanso** automático al marcar una serie: suena y vibra al terminar (en iPhone solo suena), y sigue contando aunque cambies de pestaña.
 - **Rutinas editables**: incluye Push / Pull / Legs de ejemplo.
 - **Progreso**: gráfica de 1RM estimado (Epley), peso máximo y % de mejora por ejercicio.
 - **Detección de estancamiento**: avisa si un ejercicio lleva 3 sesiones sin mejorar.

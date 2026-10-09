@@ -5,6 +5,7 @@ import { HistoryScreen } from './components/HistoryScreen'
 import { ProgressScreen } from './components/ProgressScreen'
 import { SettingsScreen } from './components/SettingsScreen'
 import { DialogProvider } from './components/Dialog'
+import { RestTimerProvider } from './components/RestTimer'
 
 const TABS = [
   { id: 'train', label: 'Entrenar', icon: '🏋️' },
@@ -51,7 +52,9 @@ export default function App() {
   return (
     <StoreProvider>
       <DialogProvider>
-        <Shell />
+        <RestTimerProvider>
+          <Shell />
+        </RestTimerProvider>
       </DialogProvider>
     </StoreProvider>
   )
