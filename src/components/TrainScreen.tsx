@@ -7,6 +7,7 @@ import { ActiveWorkout } from './ActiveWorkout'
 import { RoutineEditor } from './RoutineEditor'
 import { useDialog } from './Dialog'
 import { useRestTimer } from './RestTimer'
+import { finishMessage, greeting, homeMessage } from '../lib/motivation'
 
 export function TrainScreen() {
   const { state, update } = useStore()
@@ -73,16 +74,26 @@ export function TrainScreen() {
   const lastByRoutine = new Map<string, string>()
   for (const w of state.workouts) if (w.routineId) lastByRoutine.set(w.routineId, w.startedAt)
 
+  const { userName, namePrompted } = state.settings
+  const finish = summary && finishMessage(userName, summary.prs.length, state.workouts.length)
+
   const begin = (routine: Routine | null) =>
     update((s) => ({ ...s, active: startWorkout(routine, s.exercises, s.workouts) }))
 
   return (
     <div className="screen">
-      <h1>Entrenar</h1>
+      <header className="hello">
+        <h1>{greeting(userName)}</h1>
+        {/* El nombre ya va en el saludo: no lo repetimos en la frase */}
+        <p className="muted">{homeMessage('', state.workouts)}</p>
+      </header>
 
-      {summary && (
+      {!namePrompted && <NamePrompt />}
+
+      {summary && finish && (
         <section className="card summary">
-          <h2>¡Entreno guardado! 💪</h2>
+          <h2>{finish.title}</h2>
+          <p>{finish.subtitle}</p>
           <p className="muted">
             {summary.workout.name} · {fmtDuration(new Date(summary.workout.finishedAt!).getTime() - new Date(summary.workout.startedAt).getTime())} ·{' '}
             {summary.workout.entries.reduce((n, e) => n + e.sets.length, 0)} series
@@ -92,9 +103,7 @@ export function TrainScreen() {
               <p><strong>🏆 Nuevos récords:</strong></p>
               <ul>{summary.prs.map((id) => <li key={id}>{nameOf(id)}</li>)}</ul>
             </>
-          ) : (
-            <p className="muted">Sin récords esta vez. La constancia es lo que cuenta.</p>
-          )}
+          ) : null}
           <button className="ghost" onClick={() => setSummary(null)}>Cerrar</button>
         </section>
       )}
@@ -122,5 +131,31 @@ export function TrainScreen() {
         <button className="secondary" onClick={() => begin(null)}>Entreno libre</button>
       </div>
     </div>
+  )
+}
+
+/** Pregunta el nombre una sola vez para personalizar los mensajes. */
+function NamePrompt() {
+  const { update } = useStore()
+  const [name, setName] = useState('')
+  const save = (userName: string) =>
+    update((s) => ({ ...s, settings: { ...s.settings, userName: userName.trim().slice(0, 30), namePrompted: true } }))
+
+  return (
+    <form
+      className="card name-prompt"
+      onSubmit={(e) => {
+        e.preventDefault()
+        if (name.trim()) save(name)
+      }}
+    >
+      <h3>¿Cómo te llamas?</h3>
+      <p className="muted small">Para saludarte y celebrar tus logros contigo. Puedes cambiarlo en Ajustes.</p>
+      <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Tu nombre" maxLength={30} autoComplete="given-name" />
+      <div className="actions">
+        <button type="button" className="ghost" onClick={() => save('')}>Omitir</button>
+        <button type="submit" className="primary" disabled={!name.trim()}>Guardar</button>
+      </div>
+    </form>
   )
 }

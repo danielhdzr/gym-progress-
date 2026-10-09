@@ -44,6 +44,10 @@ export interface Workout {
 }
 
 export interface Settings {
+  /** Nombre para los saludos (vacío = sin nombre) */
+  userName: string
+  /** Ya se le preguntó el nombre (para no volver a insistir si lo omite) */
+  namePrompted: boolean
   restSeconds: number
   /** Pitido al terminar el descanso */
   restSound: boolean

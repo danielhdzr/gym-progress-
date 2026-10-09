@@ -43,6 +43,21 @@ export function SettingsScreen() {
       <h1>Ajustes</h1>
 
       <section className="card">
+        <label className="field">
+          Tu nombre
+          <input
+            value={state.settings.userName}
+            placeholder="Para los saludos y mensajes de ánimo"
+            maxLength={30}
+            autoComplete="given-name"
+            onChange={(e) =>
+              update((s) => ({ ...s, settings: { ...s.settings, userName: e.target.value, namePrompted: true } }))
+            }
+          />
+        </label>
+      </section>
+
+      <section className="card">
         <h3>Descanso entre series</h3>
         <div className="chips">
           {[60, 90, 120, 180, 240].map((s) => (
@@ -169,7 +184,7 @@ export function SettingsScreen() {
         </button>
       </section>
 
-      <p className="muted small center">Gym Progress · v0.3</p>
+      <p className="muted small center">Gym Progress · v0.4</p>
     </div>
   )
 }
