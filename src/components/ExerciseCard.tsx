@@ -6,6 +6,7 @@ import { addSet, patchSet, removeEntry, removeLastSet, setNote } from '../lib/wo
 import { fmtPlates, platesPerSide, warmupSets } from '../lib/tools'
 import { fmtShortDate } from '../lib/format'
 import { NumInput } from './NumInput'
+import { fmtSet, metricOf, unitHeader } from '../lib/metric'
 import { useDialog } from './Dialog'
 
 type Entries = ExerciseLog[]
@@ -21,9 +22,6 @@ interface Props {
   onToggle?: (si: number) => void
 }
 
-const fmtSet = (s: { weight: number; reps: number; rpe?: number }) =>
-  `${s.weight ? `${s.weight}×${s.reps}` : `${s.reps} reps`}${s.rpe ? ` @${s.rpe}` : ''}`
-
 export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle }: Props) {
   const { state } = useStore()
   const dialog = useDialog()
@@ -34,9 +32,10 @@ export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle
   if (!ex) return null
 
   const live = mode === 'live'
+  const metric = metricOf(ex)
   const tip = suggest(ex, sessions, entry.sets.length)
   const last = sessions.at(-1)
-  const stalled = live && isStalled(sessions)
+  const stalled = live && isStalled(sessions, metric)
   const working = Math.max(0, ...entry.sets.map((s) => s.weight))
   const { barWeight, plates } = state.settings
 
@@ -59,25 +58,25 @@ export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle
       {live && <p className={`tip tip-${tip.kind}`}>{tip.text}</p>}
       {stalled && (
         <p className="tip tip-deload">
-          Llevas 3 sesiones sin mejorar en este ejercicio. Prueba un deload, cambiar el rango de reps o una variante.
+          Llevas 3 sesiones sin mejorar en este ejercicio. Prueba un deload, cambiar el rango o una variante.
         </p>
       )}
       {last && (
         <p className="muted small">
-          {live ? 'Última vez' : `Sesión anterior (${fmtShortDate(last.date)})`}: {last.sets.map(fmtSet).join(', ')}
+          {live ? 'Última vez' : `Sesión anterior (${fmtShortDate(last.date)})`}: {last.sets.map((x) => fmtSet(x, metric)).join(', ')}
           {last.note && <span className="last-note"> · “{last.note}”</span>}
         </p>
       )}
 
       <div className={`sets ${live ? '' : 'no-check'}`}>
         <div className="set-row set-header">
-          <span>#</span><span>kg</span><span>reps</span><span>RPE</span>{live && <span />}
+          <span>#</span><span>kg</span><span>{unitHeader(metric)}</span><span>RPE</span>{live && <span />}
         </div>
         {entry.sets.map((set, si) => (
           <div key={si} className={`set-row ${live && set.done ? 'is-done' : ''}`}>
             <span className="set-n">{si + 1}</span>
             <NumInput decimal ariaLabel={`Peso serie ${si + 1}`} placeholder="0" value={set.weight} onChange={(weight) => setEntries((es) => patchSet(es, index, si, { weight }))} />
-            <NumInput ariaLabel={`Reps serie ${si + 1}`} placeholder="0" value={set.reps} onChange={(reps) => setEntries((es) => patchSet(es, index, si, { reps }))} />
+            <NumInput ariaLabel={`${metric === 'reps' ? 'Reps' : metric === 'seconds' ? 'Segundos' : 'Metros'} serie ${si + 1}`} placeholder="0" value={set.reps} onChange={(reps) => setEntries((es) => patchSet(es, index, si, { reps }))} />
             <NumInput
               decimal
               ariaLabel={`RPE serie ${si + 1}`}

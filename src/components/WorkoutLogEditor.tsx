@@ -36,7 +36,7 @@ export function WorkoutLogEditor({ workout, isNew, onClose, onSaved }: Props) {
       await dialog.alert('La fecha no puede ser en el futuro.')
       return
     }
-    const result = saveLoggedWorkout({ ...draft, name: draft.name.trim() || 'Entreno' }, duration, state.workouts)
+    const result = saveLoggedWorkout({ ...draft, name: draft.name.trim() || 'Entreno' }, duration, state.workouts, state.exercises)
     if (!result.workout.entries.length) {
       await dialog.alert('Agrega al menos una serie con repeticiones para guardar el entreno.')
       return
@@ -97,9 +97,8 @@ export function WorkoutLogEditor({ workout, isNew, onClose, onSaved }: Props) {
       {picking && (
         <ExercisePicker
           onClose={() => setPicking(false)}
-          onPick={(id) => {
-            const ex = state.exercises.find((e) => e.id === id)
-            if (ex) setEntries((entries) => [...entries, newEntry(ex, history, 3, true)])
+          onPick={(ex) => {
+            setEntries((entries) => [...entries, newEntry(ex, history, 3, true)])
             setPicking(false)
           }}
         />

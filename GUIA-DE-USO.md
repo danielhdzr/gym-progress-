@@ -14,11 +14,12 @@ Es gratis, no necesita cuenta y **tus datos se quedan solo en tu teléfono**.
 2. [Instalar en Android](#-instalar-en-android)
 3. [Instalar en computadora](#-instalar-en-computadora-opcional)
 4. [Tu primer entreno](#-tu-primer-entreno)
-5. [Cómo sacarle el máximo provecho](#-cómo-sacarle-el-máximo-provecho)
-6. [Respaldo de tus datos (importante)](#-respaldo-de-tus-datos-importante)
-7. [Notas específicas de iPhone](#-notas-específicas-de-iphone)
-8. [Notas específicas de Android](#-notas-específicas-de-android)
-9. [Preguntas frecuentes](#-preguntas-frecuentes)
+5. [Caminata y carrera (Cardio)](#-caminata-y-carrera-cardio)
+6. [Cómo sacarle el máximo provecho](#-cómo-sacarle-el-máximo-provecho)
+7. [Respaldo de tus datos (importante)](#-respaldo-de-tus-datos-importante)
+8. [Notas específicas de iPhone](#-notas-específicas-de-iphone)
+9. [Notas específicas de Android](#-notas-específicas-de-android)
+10. [Preguntas frecuentes](#-preguntas-frecuentes)
 
 ---
 
@@ -79,6 +80,29 @@ Las series ya vienen llenas con esa sugerencia: solo tienes que hacerlas y marca
 
 ---
 
+## 🏃 Caminata y carrera (Cardio)
+
+En la pestaña **Cardio** registras tus caminatas y carreras.
+
+**Con el cronómetro:**
+1. Elige **🚶 Caminata** o **🏃 Carrera** y toca **▶ Iniciar**.
+2. Puedes **pausar** y **reanudar**. Si cierras la app o se apaga la pantalla, el cronómetro sigue contando.
+3. Al terminar toca **■ Terminar** y anota la **distancia en km** (de tu reloj, otra app o la caminadora). El tiempo ya viene lleno.
+
+**Sin cronómetro:** toca **"+ Registrar manualmente"** y anota distancia, tiempo y fecha.
+
+La app calcula tu **ritmo** (minutos por km) y te muestra:
+- **Esta semana:** km, salidas y tiempo total, comparado con la semana pasada.
+- **Meta semanal:** toca **"+ Meta"** y define cuántos km quieres recorrer por semana.
+- **Récords** de caminata y de carrera por separado: distancia más larga, más tiempo y mejor ritmo (solo en recorridos de 1 km o más).
+- **Gráfica** de km por semana de las últimas 8 semanas.
+
+Toca cualquier registro del historial para editarlo o eliminarlo.
+
+> La app no usa GPS: la distancia la anotas tú. Así funciona igual en caminadora y no gasta batería.
+
+---
+
 ## 🚀 Cómo sacarle el máximo provecho
 
 ### Registra el RPE (opcional, pero recomendado)
@@ -99,9 +123,12 @@ Con el RPE, las sugerencias son más inteligentes:
 - **🔥 Discos:** te muestra las **series de calentamiento** recomendadas y **qué discos poner de cada lado** de la barra. Configura tu barra y los discos de tu gym en **Ajustes**.
 - **📝 Nota:** anota cualquier cosa ("molestia en el hombro", "agarre cerrado"). La verás la próxima vez junto a "Última vez".
 
+### Ejercicios por tiempo o distancia
+Al crear un ejercicio elige **"Se mide en"**: **Repeticiones**, **Segundos** (plancha, colgarse de la barra) o **Metros** (paseo del granjero, empuje de trineo). La app te pedirá **+5 s** o **+5 m** por sesión hasta llegar a la meta máxima, y después sugerirá subir peso.
+
 ### Ajusta tus ejercicios
-En **Ajustes → Ejercicios** puedes cambiar, por ejercicio:
-- **Rango de reps** (por ejemplo, 6–10): cuando llegas al máximo en todas las series, la app sugiere subir peso.
+En **Ajustes → Ejercicios** toca el nombre de un ejercicio para cambiar su nombre, músculo o unidad. También puedes ajustar directamente:
+- **Meta mín/máx** (por ejemplo, 6–10 reps o 20–40 m): cuando llegas al máximo en todas las series, la app sugiere subir peso.
 - **+kg**: cuánto subir cada vez. Usa 1–2 kg en ejercicios pequeños (laterales, curl) y 2.5–5 kg en los grandes (sentadilla, peso muerto).
 
 ### ¿Olvidaste anotar un entreno?

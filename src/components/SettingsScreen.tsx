@@ -1,15 +1,18 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { Exercise } from '../types'
 import { parseState, useStore } from '../lib/store'
 import { ALL_PLATES, defaultState } from '../lib/defaults'
 import { NumInput } from './NumInput'
 import { useDialog } from './Dialog'
 import { playRestDone, unlockAudio } from '../lib/sound'
+import { ExerciseForm } from './ExercisePicker'
+import { metricOf, unitHeader } from '../lib/metric'
 
 export function SettingsScreen() {
   const { state, update } = useStore()
   const dialog = useDialog()
   const fileRef = useRef<HTMLInputElement>(null)
+  const [editingEx, setEditingEx] = useState<Exercise | null>(null)
 
   const editExercise = (id: string, patch: Partial<Exercise>) =>
     update((s) => ({ ...s, exercises: s.exercises.map((e) => (e.id === id ? { ...e, ...patch } : e)) }))
@@ -138,15 +141,19 @@ export function SettingsScreen() {
       <section className="card">
         <h3>Ejercicios</h3>
         <p className="muted small">
-          Rango de reps y cuánto subir de peso. Cuando completas el máximo de reps en todas las series, la app te sugiere subir.
+          Meta (reps, segundos o metros) y cuánto subir de peso. Toca un ejercicio para cambiar su nombre, músculo o unidad.
         </p>
         <div className="ex-table">
           <div className="ex-row ex-header"><span>Ejercicio</span><span>Mín</span><span>Máx</span><span>+kg</span></div>
           {state.exercises.map((e) => (
             <div key={e.id} className="ex-row">
-              <span className="small">{e.name}</span>
-              <NumInput ariaLabel={`Reps mínimas ${e.name}`} value={e.repMin} onChange={(n) => editExercise(e.id, { repMin: n })} />
-              <NumInput ariaLabel={`Reps máximas ${e.name}`} value={e.repMax} onChange={(n) => editExercise(e.id, { repMax: n })} />
+              <button className="ex-name small" onClick={() => setEditingEx(e)} aria-label={`Editar ${e.name}`}>
+                {e.name}
+                {metricOf(e) !== 'reps' && <span className="muted"> ({unitHeader(metricOf(e))})</span>}
+                <span className="muted"> ›</span>
+              </button>
+              <NumInput ariaLabel={`Meta mínima ${e.name}`} value={e.repMin} onChange={(n) => editExercise(e.id, { repMin: n })} />
+              <NumInput ariaLabel={`Meta máxima ${e.name}`} value={e.repMax} onChange={(n) => editExercise(e.id, { repMax: n })} />
               <NumInput decimal ariaLabel={`Incremento ${e.name}`} value={e.increment} onChange={(n) => editExercise(e.id, { increment: n })} />
             </div>
           ))}
@@ -184,7 +191,27 @@ export function SettingsScreen() {
         </button>
       </section>
 
-      <p className="muted small center">Gym Progress · v0.4</p>
+      <p className="muted small center">Gym Progress · v0.6</p>
+
+      {editingEx && (
+        <div className="sheet-backdrop" onClick={() => setEditingEx(null)}>
+          <div className="sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="sheet-head">
+              <h2>Editar ejercicio</h2>
+            </div>
+            <div className="sheet-body">
+              <ExerciseForm
+                initial={editingEx}
+                onCancel={() => setEditingEx(null)}
+                onSave={(ex) => {
+                  editExercise(ex.id, ex)
+                  setEditingEx(null)
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

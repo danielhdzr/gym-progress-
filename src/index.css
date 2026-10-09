@@ -296,3 +296,22 @@ input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1
 .hello h1 { margin-bottom: 4px; font-size: 1.5rem; }
 .hello p { margin: 0 0 4px; }
 .name-prompt { border-color: var(--accent); }
+
+/* Ajustes: nombre de ejercicio editable */
+.ex-name { text-align: left; padding: 6px 0; color: var(--text); border-radius: 0; }
+.sheet-body .form { padding-bottom: 4px; }
+
+/* Cardio */
+.block { display: block; }
+.big { padding: 14px; font-size: 1.05rem; }
+.timer-card { border-color: var(--accent); }
+.timer-clock { font-size: 3.2rem; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; padding: 4px 0; }
+.timer-clock.paused { color: var(--muted); }
+.goal-track { height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+.goal-fill { height: 100%; background: var(--info); border-radius: 6px; transition: width 0.3s; }
+.goal-fill.done { background: var(--good); }
+.cardio-row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 10px 0; border-radius: 0; border-bottom: 1px solid var(--border); }
+.cardio-row:last-child { border-bottom: 0; }
+.cardio-icon { font-size: 1.4rem; }
+.pace-preview { margin: 0; padding: 8px 10px; background: var(--surface-2); border-radius: 10px; font-variant-numeric: tabular-nums; }
+.tabbar button { font-size: 0.68rem; }

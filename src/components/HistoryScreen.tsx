@@ -4,6 +4,7 @@ import { useStore } from '../lib/store'
 import { fmtDate, fmtDuration, toYmd, withLocalDate } from '../lib/format'
 import { startWorkout } from '../lib/workout'
 import { useDialog } from './Dialog'
+import { fmtSet, metricOf } from '../lib/metric'
 import { WorkoutLogEditor } from './WorkoutLogEditor'
 
 export function HistoryScreen() {
@@ -70,7 +71,7 @@ export function HistoryScreen() {
                 {e.note && <span className="last-note"> · “{e.note}”</span>}
               </span>
               <span className="muted">
-                {e.sets.map((s) => `${s.weight ? `${s.weight}×${s.reps}` : `${s.reps}`}${s.rpe ? `@${s.rpe}` : ''}`).join('  ')}
+                {e.sets.map((s) => fmtSet(s, metricOf(state.exercises.find((x) => x.id === e.exerciseId)))).join('  ')}
               </span>
             </div>
           ))}

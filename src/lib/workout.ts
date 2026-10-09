@@ -47,20 +47,20 @@ const cleanEntries = (entries: ExerciseLog[], isDone: (s: SetLog) => boolean) =>
     .filter((e) => e.sets.length)
 
 /** Cierra el entreno en vivo: se queda solo con series marcadas y calcula los récords. */
-export function finishWorkout(active: Workout, history: Workout[]) {
+export function finishWorkout(active: Workout, history: Workout[], exercises: Exercise[] = []) {
   const workout: Workout = {
     ...active,
     finishedAt: new Date().toISOString(),
     entries: cleanEntries(active.entries, (s) => s.done),
   }
-  return { workout, prs: prsIn(workout, historyBefore(history, workout)) }
+  return { workout, prs: prsIn(workout, historyBefore(history, workout), exercises) }
 }
 
 /**
  * Guarda un entreno registrado a posteriori (pasado o editado): toda serie con reps cuenta como hecha,
  * y los récords se comparan solo contra lo que había antes de esa fecha.
  */
-export function saveLoggedWorkout(draft: Workout, durationMin: number, history: Workout[]) {
+export function saveLoggedWorkout(draft: Workout, durationMin: number, history: Workout[], exercises: Exercise[] = []) {
   const workout: Workout = {
     ...draft,
     finishedAt: new Date(new Date(draft.startedAt).getTime() + Math.max(0, durationMin) * 60000).toISOString(),
@@ -69,7 +69,7 @@ export function saveLoggedWorkout(draft: Workout, durationMin: number, history: 
       sets: e.sets.map((s) => ({ ...s, done: true })),
     })),
   }
-  return { workout, prs: prsIn(workout, historyBefore(history, workout)) }
+  return { workout, prs: prsIn(workout, historyBefore(history, workout), exercises) }
 }
 
 /* Operaciones sobre las series, compartidas por el entreno en vivo y el editor. */

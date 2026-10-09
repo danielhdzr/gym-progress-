@@ -26,7 +26,7 @@ export function TrainScreen() {
         onFinish={async () => {
           const active = state.active
           if (!active) return
-          const result = finishWorkout(active, state.workouts)
+          const result = finishWorkout(active, state.workouts, state.exercises)
           if (
             !result.workout.entries.length &&
             !(await dialog.confirm({

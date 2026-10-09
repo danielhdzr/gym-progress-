@@ -4,11 +4,13 @@ import { TrainScreen } from './components/TrainScreen'
 import { HistoryScreen } from './components/HistoryScreen'
 import { ProgressScreen } from './components/ProgressScreen'
 import { SettingsScreen } from './components/SettingsScreen'
+import { CardioScreen } from './components/CardioScreen'
 import { DialogProvider } from './components/Dialog'
 import { RestTimerProvider } from './components/RestTimer'
 
 const TABS = [
   { id: 'train', label: 'Entrenar', icon: '🏋️' },
+  { id: 'cardio', label: 'Cardio', icon: '🏃' },
   { id: 'progress', label: 'Progreso', icon: '📈' },
   { id: 'history', label: 'Historial', icon: '🗓️' },
   { id: 'settings', label: 'Ajustes', icon: '⚙️' },
@@ -24,6 +26,7 @@ function Shell() {
     <div className="app">
       <main>
         {tab === 'train' && <TrainScreen />}
+        {tab === 'cardio' && <CardioScreen />}
         {tab === 'progress' && <ProgressScreen />}
         {tab === 'history' && <HistoryScreen />}
         {tab === 'settings' && <SettingsScreen />}
@@ -41,6 +44,7 @@ function Shell() {
             <span className="tab-icon" aria-hidden>{t.icon}</span>
             {t.label}
             {t.id === 'train' && state.active && tab !== 'train' && <span className="live-dot" aria-label="Entreno en curso" />}
+            {t.id === 'cardio' && state.cardioTimer && tab !== 'cardio' && <span className="live-dot" aria-label="Cronómetro en curso" />}
           </button>
         ))}
       </nav>

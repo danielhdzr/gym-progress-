@@ -3,11 +3,27 @@ import { useStore } from '../lib/store'
 import { bestSet, isBodyweight, isStalled, sessionsFor, weeklySets } from '../lib/progression'
 import { fmtKg, fmtShortDate } from '../lib/format'
 import { LineChart } from './LineChart'
+import { fmtAmount, fmtSet, metricOf } from '../lib/metric'
+import type { Metric } from '../types'
 import { BodyweightCard } from './BodyweightCard'
 
 /** Rango orientativo de series semanales por músculo para hipertrofia. */
 const TARGET_MIN = 10
 const TARGET_MAX = 20
+
+/** Qué significa el número de la gráfica según la unidad del ejercicio y si lleva peso. */
+function scoreInfo(metric: Metric, bodyweight: boolean) {
+  if (metric === 'reps') {
+    return bodyweight
+      ? { label: 'Mejor reps', unit: 'reps', fmt: (v: number) => String(v), caption: 'Mejor serie (reps) por sesión' }
+      : { label: '1RM estimado', unit: 'kg', fmt: (v: number) => fmtKg(Math.round(v * 10) / 10), caption: '1RM estimado (Epley) de tu mejor serie por sesión' }
+  }
+  const what = metric === 'seconds' ? 'tiempo' : 'distancia'
+  const u = metric === 'seconds' ? 's' : 'm'
+  return bodyweight
+    ? { label: `Mejor ${what}`, unit: u, fmt: (v: number) => fmtAmount(v, metric), caption: `Mejor serie (${what}) por sesión` }
+    : { label: `Carga × ${what}`, unit: `kg·${u}`, fmt: (v: number) => `${Math.round(v)} kg·${u}`, caption: `Peso × ${what} de tu mejor serie por sesión` }
+}
 
 export function ProgressScreen() {
   const { state } = useStore()
@@ -23,7 +39,7 @@ export function ProgressScreen() {
 
   const [selected, setSelected] = useState<string>('')
   const current = trained.find((t) => t.ex.id === selected) ?? trained[0]
-  const stalled = trained.filter((t) => isStalled(t.sessions))
+  const stalled = trained.filter((t) => isStalled(t.sessions, metricOf(t.ex)))
   const weekly = weeklySets(state.workouts, state.exercises)
   const weeklyRows = Object.entries(weekly).sort((a, b) => b[1] - a[1])
 
@@ -40,13 +56,15 @@ export function ProgressScreen() {
     )
   }
 
-  const bw = current && isBodyweight(current.sessions)
-  const points = current.sessions.map((s) => ({ label: fmtShortDate(s.date), value: bestSet(s.sets).e1rm }))
+  const metric = metricOf(current.ex)
+  const bw = isBodyweight(current.sessions)
+  const info = scoreInfo(metric, bw)
+  const points = current.sessions.map((s) => ({ label: fmtShortDate(s.date), value: bestSet(s.sets, metric).score }))
   const first = points[0].value
   const lastVal = points.at(-1)!.value
   const change = first ? ((lastVal - first) / first) * 100 : 0
   const heaviest = Math.max(...current.sessions.flatMap((s) => s.sets.map((x) => x.weight)))
-  const bestE1rm = Math.max(...points.map((p) => p.value))
+  const bestScore = Math.max(...points.map((p) => p.value))
 
   return (
     <div className="screen">
@@ -57,7 +75,7 @@ export function ProgressScreen() {
           <h3>⚠️ Estancados</h3>
           <p className="small">Sin mejorar en las últimas 3 sesiones:</p>
           <ul>{stalled.map((s) => <li key={s.ex.id}>{s.ex.name}</li>)}</ul>
-          <p className="muted small">Prueba una semana de deload (−10% peso), cambiar el rango de reps o una variante del ejercicio.</p>
+          <p className="muted small">Prueba una semana de deload (−10% peso), cambiar el rango o una variante del ejercicio.</p>
         </section>
       )}
 
@@ -68,8 +86,8 @@ export function ProgressScreen() {
 
         <div className="stats">
           <div>
-            <span className="stat">{bw ? bestE1rm : fmtKg(Math.round(bestE1rm * 10) / 10)}</span>
-            <span className="muted small">{bw ? 'Mejor reps' : '1RM estimado'}</span>
+            <span className="stat">{info.fmt(bestScore)}</span>
+            <span className="muted small">{info.label}</span>
           </div>
           {!bw && (
             <div>
@@ -85,14 +103,14 @@ export function ProgressScreen() {
           </div>
         </div>
 
-        <LineChart points={points} unit={bw ? 'reps' : 'kg'} />
-        <p className="muted small center">{bw ? 'Mejor serie (reps) por sesión' : '1RM estimado (Epley) de tu mejor serie por sesión'}</p>
+        <LineChart points={points} unit={info.unit} />
+        <p className="muted small center">{info.caption}</p>
 
         <div className="group-label">Últimas sesiones</div>
         {current.sessions.slice(-5).reverse().map((s) => (
           <div key={s.workoutId} className="history-line">
             <span>{fmtShortDate(s.date)}</span>
-            <span className="muted">{s.sets.map((x) => (x.weight ? `${x.weight}×${x.reps}` : `${x.reps}`)).join('  ')}</span>
+            <span className="muted">{s.sets.map((x) => fmtSet(x, metric)).join('  ')}</span>
           </div>
         ))}
       </section>

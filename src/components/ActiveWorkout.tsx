@@ -76,9 +76,8 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
       {picking && (
         <ExercisePicker
           onClose={() => setPicking(false)}
-          onPick={(id) => {
-            const ex = state.exercises.find((e) => e.id === id)
-            if (ex) setEntries((entries) => [...entries, newEntry(ex, state.workouts, 3)])
+          onPick={(ex) => {
+            setEntries((entries) => [...entries, newEntry(ex, state.workouts, 3)])
             setPicking(false)
           }}
         />

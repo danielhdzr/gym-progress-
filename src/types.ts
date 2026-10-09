@@ -1,3 +1,6 @@
+/** Cómo se mide una serie: repeticiones, segundos (plancha) o metros (paseo del granjero). */
+export type Metric = 'reps' | 'seconds' | 'meters'
+
 export interface Exercise {
   id: string
   name: string
@@ -7,6 +10,8 @@ export interface Exercise {
   repMax: number
   /** Cuánto subir de peso cuando se completa el rango (kg) */
   increment: number
+  /** Unidad de cada serie; sin definir = repeticiones (datos anteriores) */
+  metric?: Metric
 }
 
 export interface RoutineItem {
@@ -22,6 +27,7 @@ export interface Routine {
 
 export interface SetLog {
   weight: number
+  /** Cantidad en la unidad del ejercicio: reps, segundos o metros */
   reps: number
   done: boolean
   /** Esfuerzo percibido 1–10 (10 = al fallo). Opcional. */
@@ -57,6 +63,28 @@ export interface Settings {
   plates: number[]
 }
 
+export type CardioType = 'walk' | 'run'
+
+export interface CardioSession {
+  id: string
+  type: CardioType
+  /** Inicio (ISO) */
+  date: string
+  distanceKm: number
+  durationMin: number
+  note?: string
+}
+
+/** Cronómetro de cardio en curso; se guarda para sobrevivir a cerrar la app. */
+export interface CardioTimer {
+  type: CardioType
+  startedAt: string
+  /** Milisegundos acumulados antes de la última pausa */
+  elapsedMs: number
+  /** Si está corriendo, desde cuándo (epoch ms); null = en pausa */
+  runningSince: number | null
+}
+
 export interface BodyweightEntry {
   /** Fecha local YYYY-MM-DD */
   date: string
@@ -71,4 +99,8 @@ export interface AppState {
   active: Workout | null
   settings: Settings
   bodyweight: BodyweightEntry[]
+  cardio: CardioSession[]
+  cardioTimer: CardioTimer | null
+  /** Meta semanal de km (0 = sin meta) */
+  cardioGoalKm: number
 }

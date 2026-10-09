@@ -1,4 +1,5 @@
-import type { Exercise, SetLog, Workout } from '../types'
+import type { Exercise, Metric, SetLog, Workout } from '../types'
+import { fmtAmount, fmtRange, metricOf, stepFor } from './metric'
 
 /** 1RM estimado con la fórmula de Epley. Para ejercicios sin peso usamos las reps. */
 export function e1rm(weight: number, reps: number): number {
@@ -28,11 +29,21 @@ export function sessionsFor(exerciseId: string, workouts: Workout[]): Session[] 
   return sessions.sort((a, b) => a.date.localeCompare(b.date))
 }
 
-export function bestSet(sets: SetLog[]): { weight: number; reps: number; e1rm: number } {
-  let best = { weight: 0, reps: 0, e1rm: 0 }
+/**
+ * Número comparable entre series para gráficas, récords y estancamiento.
+ * Reps: 1RM estimado. Tiempo/distancia: carga × cantidad (kg·s, kg·m), o solo la cantidad sin peso.
+ */
+export function setScore(weight: number, amount: number, metric: Metric = 'reps'): number {
+  if (metric === 'reps') return e1rm(weight, amount)
+  if (amount <= 0) return 0
+  return weight > 0 ? weight * amount : amount
+}
+
+export function bestSet(sets: SetLog[], metric: Metric = 'reps'): { weight: number; reps: number; score: number } {
+  let best = { weight: 0, reps: 0, score: 0 }
   for (const s of sets) {
-    const v = e1rm(s.weight, s.reps)
-    if (v > best.e1rm) best = { weight: s.weight, reps: s.reps, e1rm: v }
+    const v = setScore(s.weight, s.reps, metric)
+    if (v > best.score) best = { weight: s.weight, reps: s.reps, score: v }
   }
   return best
 }
@@ -64,16 +75,23 @@ function topSets(session: Session) {
  *  2. Cuando lo logras, sube el peso y regresa al mínimo del rango.
  *  3. Si dos sesiones seguidas no llegas al mínimo, baja ~10% (deload).
  * Con RPE registrado se ajusta: al fallo (RPE 10) no sube aunque completes el rango,
- * y si todo se sintió fácil (RPE ≤ 7) busca +2 reps en vez de +1.
+ * y si todo se sintió fácil (RPE ≤ 7) busca el doble de avance.
+ * En ejercicios por tiempo o distancia el avance es de 5 s / 5 m en lugar de 1 rep.
  */
 export function suggest(ex: Exercise, sessions: Session[], plannedSets: number): Suggestion {
+  const metric = metricOf(ex)
+  const step = stepFor(metric)
+  const A = (n: number) => fmtAmount(n, metric)
   const last = sessions.at(-1)
   if (!last) {
     return {
       kind: 'new',
       weight: 0,
       reps: ex.repMin,
-      text: `Primera vez: elige un peso con el que hagas ${ex.repMin}–${ex.repMax} reps con buena técnica.`,
+      text:
+        metric === 'reps'
+          ? `Primera vez: elige un peso con el que hagas ${fmtRange(ex.repMin, ex.repMax, metric)} con buena técnica.`
+          : `Primera vez: anota el peso (si usas) y busca ${fmtRange(ex.repMin, ex.repMax, metric)} por serie.`,
     }
   }
 
@@ -84,15 +102,15 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
   const maxRpe = rpes.length ? Math.max(...rpes) : 0
 
   if (top.weight <= 0) {
-    const target = minReps + 1
+    const target = minReps + step
     return {
       kind: 'reps',
       weight: 0,
       reps: target,
       text:
         minReps >= ex.repMax
-          ? `Dominas el rango: agrega lastre (+${ex.increment} kg) o busca ${target} reps.`
-          : `Busca ${target} reps por serie (la última vez: ${minReps}).`,
+          ? `Dominas el rango: agrega peso (+${ex.increment} kg) o busca ${A(target)}.`
+          : `Busca ${A(target)} por serie (la última vez: ${A(minReps)}).`,
     }
   }
 
@@ -106,7 +124,7 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
         kind: 'deload',
         weight,
         reps: ex.repMax,
-        text: `Dos sesiones sin llegar a ${ex.repMin} reps con ${top.weight} kg. Baja a ${weight} kg y reconstruye.`,
+        text: `Dos sesiones sin llegar a ${A(ex.repMin)} con ${top.weight} kg. Baja a ${weight} kg y reconstruye.`,
       }
     }
   }
@@ -117,7 +135,7 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
       kind: 'reps',
       weight: top.weight,
       reps: ex.repMax,
-      text: `Llegaste a ${ex.repMax} reps pero al fallo (RPE 10). Repite ${top.weight} kg hasta sentirlo en RPE 8–9 y luego sube.`,
+      text: `Llegaste a ${A(ex.repMax)} pero al fallo (RPE 10). Repite ${top.weight} kg hasta sentirlo en RPE 8–9 y luego sube.`,
     }
   }
   if (completedAll) {
@@ -126,48 +144,50 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
       kind: 'up',
       weight,
       reps: ex.repMin,
-      text: `¡Completaste ${ex.repMax} reps en todas las series! Sube a ${weight} kg × ${ex.repMin}.`,
+      text: `¡Completaste ${A(ex.repMax)} en todas las series! Sube a ${weight} kg × ${A(ex.repMin)}.`,
     }
   }
 
   const easy = allRated && maxRpe <= 7
-  const target = Math.min(Math.max(minReps + (easy ? 2 : 1), ex.repMin), ex.repMax)
+  const target = Math.min(Math.max(minReps + (easy ? 2 : 1) * step, ex.repMin), ex.repMax)
   if (easy) {
     return {
       kind: 'reps',
       weight: top.weight,
       reps: target,
-      text: `Se sintió fácil (RPE ≤ 7): mantén ${top.weight} kg y busca ${target} reps por serie.`,
+      text: `Se sintió fácil (RPE ≤ 7): mantén ${top.weight} kg y busca ${A(target)} por serie.`,
     }
   }
   return {
     kind: 'reps',
     weight: top.weight,
     reps: target,
-    text: `Mantén ${top.weight} kg y busca ${target} reps por serie (meta: ${ex.repMax}).`,
+    text: `Mantén ${top.weight} kg y busca ${A(target)} por serie (meta: ${A(ex.repMax)}).`,
   }
 }
 
-/** Estancado: las últimas 3 sesiones no superaron el mejor 1RM estimado anterior. */
-export function isStalled(sessions: Session[]): boolean {
+/** Estancado: las últimas 3 sesiones no superaron la mejor marca anterior. */
+export function isStalled(sessions: Session[], metric: Metric = 'reps'): boolean {
   if (sessions.length < 4) return false
   const before = sessions.slice(0, -3)
   const recent = sessions.slice(-3)
-  const bestBefore = Math.max(...before.map((s) => bestSet(s.sets).e1rm))
-  const bestRecent = Math.max(...recent.map((s) => bestSet(s.sets).e1rm))
+  const bestBefore = Math.max(...before.map((s) => bestSet(s.sets, metric).score))
+  const bestRecent = Math.max(...recent.map((s) => bestSet(s.sets, metric).score))
   return bestRecent <= bestBefore
 }
 
 /** Récords personales logrados en un entreno respecto a todo lo anterior. */
-export function prsIn(workout: Workout, previous: Workout[]): string[] {
+export function prsIn(workout: Workout, previous: Workout[], exercises: Exercise[] = []): string[] {
+  const byId = new Map(exercises.map((e) => [e.id, e]))
   const prs: string[] = []
   for (const entry of workout.entries) {
     const done = entry.sets.filter((s) => s.done && s.reps > 0)
     if (!done.length) continue
-    const now = bestSet(done).e1rm
+    const metric = metricOf(byId.get(entry.exerciseId))
+    const now = bestSet(done, metric).score
     const before = sessionsFor(entry.exerciseId, previous)
     if (!before.length) continue
-    const prevBest = Math.max(...before.map((s) => bestSet(s.sets).e1rm))
+    const prevBest = Math.max(...before.map((s) => bestSet(s.sets, metric).score))
     if (now > prevBest) prs.push(entry.exerciseId)
   }
   return prs

@@ -76,8 +76,8 @@ export function RoutineEditor({ routine, onSave, onDelete, onClose }: Props) {
       {picking && (
         <ExercisePicker
           onClose={() => setPicking(false)}
-          onPick={(exerciseId) => {
-            setItems((items) => [...items, { exerciseId, sets: 3 }])
+          onPick={(ex) => {
+            setItems((items) => [...items, { exerciseId: ex.id, sets: 3 }])
             setPicking(false)
           }}
         />

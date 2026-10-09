@@ -11,6 +11,11 @@ export const MUSCLES = [
   'Glúteos',
   'Pantorrillas',
   'Core',
+  'Antebrazos',
+  'Trapecio',
+  'Aductores',
+  'Abductores',
+  'Cuerpo completo',
 ]
 
 const ex = (
@@ -100,5 +105,8 @@ export function defaultState(): AppState {
     active: null,
     settings: DEFAULT_SETTINGS,
     bodyweight: [],
+    cardio: [],
+    cardioTimer: null,
+    cardioGoalKm: 0,
   }
 }
