@@ -8,12 +8,14 @@ import { RoutineEditor } from './RoutineEditor'
 import { useDialog } from './Dialog'
 import { useRestTimer } from './RestTimer'
 import { finishMessage, greeting, homeMessage } from '../lib/motivation'
+import { AmbienceHero, useAmbience } from './Ambience'
 import { fmtKcal, workoutKcal } from '../lib/calories'
 
 export function TrainScreen() {
   const { state, update } = useStore()
   const dialog = useDialog()
   const rest = useRestTimer()
+  const ambience = useAmbience()
   const [editing, setEditing] = useState<Routine | null>(null)
   const [summary, setSummary] = useState<{ workout: Workout; prs: string[] } | null>(null)
 
@@ -83,11 +85,8 @@ export function TrainScreen() {
 
   return (
     <div className="screen">
-      <header className="hello">
-        <h1>{greeting(userName)}</h1>
-        {/* El nombre ya va en el saludo: no lo repetimos en la frase */}
-        <p className="muted">{homeMessage('', state.workouts)}</p>
-      </header>
+      {/* El nombre ya va en el saludo: no lo repetimos en la frase */}
+      <AmbienceHero greeting={greeting(userName, ambience.now, '')} message={homeMessage('', state.workouts, ambience.now)} />
 
       {!namePrompted && <NamePrompt />}
 

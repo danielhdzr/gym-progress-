@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import type { Exercise } from '../types'
+import type { CountryCode, Exercise, Settings } from '../types'
 import { parseState, useStore } from '../lib/store'
 import { ALL_PLATES, defaultState } from '../lib/defaults'
 import { NumInput } from './NumInput'
@@ -7,12 +7,17 @@ import { useDialog } from './Dialog'
 import { playRestDone, unlockAudio } from '../lib/sound'
 import { ExerciseForm } from './ExercisePicker'
 import { metricOf, unitHeader } from '../lib/metric'
+import { COUNTRIES } from '../lib/occasions'
+import { toYmd } from '../lib/format'
 
 export function SettingsScreen() {
   const { state, update } = useStore()
   const dialog = useDialog()
   const fileRef = useRef<HTMLInputElement>(null)
   const [editingEx, setEditingEx] = useState<Exercise | null>(null)
+  const setSetting = (patch: Partial<Settings>) => update((s) => ({ ...s, settings: { ...s.settings, ...patch } }))
+  const firstWorkout = state.workouts.filter((w) => w.finishedAt).map((w) => w.startedAt).sort()[0]
+  const firstWorkoutYmd = firstWorkout ? toYmd(firstWorkout) : ''
 
   const editExercise = (id: string, patch: Partial<Exercise>) =>
     update((s) => ({ ...s, exercises: s.exercises.map((e) => (e.id === id ? { ...e, ...patch } : e)) }))
@@ -58,6 +63,42 @@ export function SettingsScreen() {
             }
           />
         </label>
+      </section>
+
+      <section className="card">
+        <div className="card-head">
+          <div>
+            <h3>Temas de temporada</h3>
+            <p className="muted small">Colores y mensajes según la hora, la estación y fechas especiales.</p>
+          </div>
+          <button
+            className={`switch ${state.settings.seasonalThemes ? 'on' : ''}`}
+            role="switch"
+            aria-checked={state.settings.seasonalThemes}
+            aria-label="Temas de temporada"
+            onClick={() => setSetting({ seasonalThemes: !state.settings.seasonalThemes })}
+          />
+        </div>
+        <label className="field">
+          País (festivos y estaciones)
+          <select value={state.settings.country} onChange={(e) => setSetting({ country: e.target.value as CountryCode })}>
+            {COUNTRIES.map((c) => <option key={c.code} value={c.code}>{c.flag} {c.name}</option>)}
+          </select>
+        </label>
+        <div className="row2">
+          <label className="field">
+            🎂 Tu cumpleaños
+            <input type="date" value={state.settings.birthday} max={toYmd(new Date())} onChange={(e) => setSetting({ birthday: e.target.value })} />
+          </label>
+          <label className="field">
+            🏋️ Empecé a entrenar
+            <input type="date" value={state.settings.trainingStart || firstWorkoutYmd} max={toYmd(new Date())} onChange={(e) => setSetting({ trainingStart: e.target.value })} />
+          </label>
+        </div>
+        <p className="muted small">
+          Te felicitaremos en tu cumpleaños, cada mes que cumplas entrenando y en tu aniversario.
+          {!state.settings.trainingStart && firstWorkoutYmd && ' Por ahora se usa la fecha de tu primer entreno registrado.'}
+        </p>
       </section>
 
       <section className="card">
@@ -191,7 +232,7 @@ export function SettingsScreen() {
         </button>
       </section>
 
-      <p className="muted small center">Gym Progress · v0.7</p>
+      <p className="muted small center">Gym Progress · v0.8</p>
 
       {editingEx && (
         <div className="sheet-backdrop" onClick={() => setEditingEx(null)}>

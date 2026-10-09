@@ -140,6 +140,14 @@ En **Ajustes → Ejercicios** toca el nombre de un ejercicio para cambiar su nom
 - **Meta mín/máx** (por ejemplo, 6–10 reps o 20–40 m): cuando llegas al máximo en todas las series, la app sugiere subir peso.
 - **+kg**: cuánto subir cada vez. Usa 1–2 kg en ejercicios pequeños (laterales, curl) y 2.5–5 kg en los grandes (sentadilla, peso muerto).
 
+### 🎉 Temas de temporada y fechas especiales
+El encabezado de **Entrenar** cambia de color según la **hora** (🌅 mañana, ☀️ tarde, 🌙 noche) y muestra la **estación** del año. En fechas especiales cambia el color de la app y aparece un mensaje:
+- **Festivos:** Año Nuevo, San Valentín, Pascua, Halloween, Navidad y fin de año, más los de tu país (en México: 15–16 de septiembre, Día de Muertos y 20 de noviembre).
+- **Inicio de cada estación** (equinoccios y solsticios), según tu hemisferio.
+- **Tu cumpleaños**, **cada mes que cumples entrenando** (con tu mejor avance) y **tu aniversario** (con tus entrenos, récords y km).
+
+Configúralo en **Ajustes → Temas de temporada**: país, cumpleaños y la fecha en que empezaste a entrenar. Si no pones esa fecha, se usa la de tu primer entreno. También puedes desactivar los temas ahí.
+
 ### ¿Olvidaste anotar un entreno?
 Ve a **Historial → "+ Registrar entreno pasado"**, elige el día y la rutina, y escribe lo que hiciste. Aquí no hace falta marcar ✓: se guarda toda serie con reps.
 

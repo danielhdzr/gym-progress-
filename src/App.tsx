@@ -5,6 +5,7 @@ import { HistoryScreen } from './components/HistoryScreen'
 import { ProgressScreen } from './components/ProgressScreen'
 import { SettingsScreen } from './components/SettingsScreen'
 import { CardioScreen } from './components/CardioScreen'
+import { AmbienceStyle } from './components/Ambience'
 import { DialogProvider } from './components/Dialog'
 import { RestTimerProvider } from './components/RestTimer'
 
@@ -24,6 +25,7 @@ function Shell() {
 
   return (
     <div className="app">
+      <AmbienceStyle />
       <main>
         {tab === 'train' && <TrainScreen />}
         {tab === 'cardio' && <CardioScreen />}

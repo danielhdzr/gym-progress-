@@ -49,7 +49,17 @@ export interface Workout {
   entries: ExerciseLog[]
 }
 
+export type CountryCode = 'MX' | 'US' | 'CO' | 'AR' | 'CL' | 'PE' | 'ES'
+
 export interface Settings {
+  /** País para festivos nacionales y hemisferio de las estaciones */
+  country: CountryCode
+  /** Colores y mensajes según hora, estación y fechas especiales */
+  seasonalThemes: boolean
+  /** YYYY-MM-DD o "" */
+  birthday: string
+  /** Desde cuándo entrenas, YYYY-MM-DD o "" (vacío = fecha del primer entreno) */
+  trainingStart: string
   /** Nombre para los saludos (vacío = sin nombre) */
   userName: string
   /** Ya se le preguntó el nombre (para no volver a insistir si lo omite) */

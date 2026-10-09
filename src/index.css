@@ -315,3 +315,23 @@ input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1
 .cardio-icon { font-size: 1.4rem; }
 .pace-preview { margin: 0; padding: 8px 10px; background: var(--surface-2); border-radius: 10px; font-variant-numeric: tabular-nums; }
 .tabbar button { font-size: 0.68rem; }
+
+/* Encabezado de temporada (hora del día / ocasión) */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  padding: 14px 16px 16px;
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--g2) 45%, transparent), transparent 60%),
+    linear-gradient(135deg, color-mix(in srgb, var(--g1) 40%, var(--surface)), color-mix(in srgb, var(--g2) 18%, var(--surface)));
+}
+.hero h1 { margin: 6px 0 4px; font-size: 1.5rem; }
+.hero p { margin: 0; }
+.hero-top { display: flex; justify-content: flex-end; }
+.hero-chip { font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--surface) 70%, transparent); border: 1px solid var(--border); }
+.hero-occasion { font-weight: 700; font-size: 1.02rem; margin-top: 4px !important; }
+.hero-detail { font-size: 0.92rem; margin-top: 4px !important; }
+.hero-sub { color: var(--muted); margin-top: 6px !important; }
+@media (prefers-color-scheme: light) { .hero-sub { color: #3f4650; } }

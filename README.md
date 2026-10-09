@@ -34,6 +34,7 @@ Instrucciones detalladas, consejos para sacarle provecho, respaldo de datos y pr
 - **Ejercicios por repeticiones, tiempo o distancia**: por ejemplo plancha en segundos o paseo del granjero en metros, con su propia progresión (+5 s / +5 m).
 - **Cardio**: caminatas y carreras con cronómetro (sigue contando aunque cierres la app), registro manual, ritmo (min/km) y velocidad (km/h), meta semanal de km, récords y gráfica de km por semana.
 - **Calorías aproximadas** de pesas y cardio con METs (Compendio de Actividades Físicas), usando tu peso corporal registrado.
+- **Temas de temporada**: el encabezado cambia según la hora (mañana, tarde, noche) y la estación (con hemisferio sur), y celebra fechas especiales: festivos internacionales y nacionales (México y otros países), tu cumpleaños, cada mes que cumples entrenando y tu aniversario. Para previsualizar una fecha: `?fecha=2026-12-25` en la URL.
 - **Saludo y mensajes de ánimo personalizados** según tu constancia: racha de semanas, entrenos de la semana, récords e hitos (1, 10, 25, 50 y 100 entrenos).
 - **Funciona sin internet**, y los datos se guardan en el dispositivo. Puedes exportar e importar un respaldo en JSON.
 

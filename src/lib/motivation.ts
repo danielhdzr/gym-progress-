@@ -25,10 +25,10 @@ const pick = <T,>(list: T[], now: Date) => list[Math.floor(now.getTime() / DAY) 
 /** ", Daniel" o "" si no hay nombre. */
 const withName = (name: string) => (name.trim() ? `, ${name.trim()}` : '')
 
-export function greeting(name: string, now = new Date()) {
+export function greeting(name: string, now = new Date(), emoji = '👋') {
   const h = now.getHours()
   const base = h >= 5 && h < 12 ? 'Buenos días' : h >= 12 && h < 19 ? 'Buenas tardes' : 'Buenas noches'
-  return `${base}${withName(name)} 👋`
+  return `${base}${withName(name)}${emoji ? ` ${emoji}` : ''}`
 }
 
 export interface Consistency {
