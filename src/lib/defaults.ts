@@ -1,4 +1,4 @@
-import type { AppState, Exercise, Routine } from '../types'
+import type { AppState, Exercise, Routine, Settings } from '../types'
 
 export const MUSCLES = [
   'Pecho',
@@ -80,6 +80,14 @@ export const DEFAULT_ROUTINES: Routine[] = [
   },
 ]
 
+export const ALL_PLATES = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5]
+
+export const DEFAULT_SETTINGS: Settings = {
+  restSeconds: 120,
+  barWeight: 20,
+  plates: [25, 20, 15, 10, 5, 2.5, 1.25],
+}
+
 export function defaultState(): AppState {
   return {
     version: 1,
@@ -87,6 +95,7 @@ export function defaultState(): AppState {
     routines: DEFAULT_ROUTINES,
     workouts: [],
     active: null,
-    settings: { restSeconds: 120 },
+    settings: DEFAULT_SETTINGS,
+    bodyweight: [],
   }
 }

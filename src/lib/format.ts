@@ -19,3 +19,19 @@ export function fmtClock(seconds: number) {
   const s = Math.max(0, Math.ceil(seconds))
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+/** Fecha local YYYY-MM-DD (para <input type="date">). */
+export function toYmd(date: Date | string) {
+  const d = new Date(date)
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
+/** Cambia el día de un ISO conservando la hora local. */
+export function withLocalDate(iso: string, ymd: string) {
+  const d = new Date(iso)
+  const [y, m, day] = ymd.split('-').map(Number)
+  d.setFullYear(y, m - 1, day)
+  return d.toISOString()
+}

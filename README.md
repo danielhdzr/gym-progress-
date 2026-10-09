@@ -12,6 +12,10 @@ App web (PWA) para registrar tus entrenos y **progresar con sobrecarga progresiv
 - **Detección de estancamiento**: avisa si un ejercicio lleva 3 sesiones sin mejorar.
 - **Récords personales** al terminar cada entreno.
 - **Volumen semanal** por músculo comparado con el rango de 10–20 series.
+- **Registrar entrenos pasados y editar el historial**: las sugerencias y los récords se recalculan según la fecha.
+- **RPE y notas**: anota qué tan pesada fue cada serie (1–10). Si llegaste al fallo la app no sube el peso; si fue fácil, pide +2 reps.
+- **Calculadora de discos y calentamiento**: discos por lado para cada peso y una rampa de calentamiento (barra, 40/60/80 %), según tu barra y tus discos.
+- **Peso corporal** con gráfica de evolución.
 - **Funciona sin internet**, y los datos se guardan en el dispositivo. Puedes exportar e importar un respaldo en JSON.
 
 ## Desarrollo

@@ -19,7 +19,9 @@ export function parseState(raw: string): AppState {
   if (data.version !== 1 || !Array.isArray(data.workouts) || !Array.isArray(data.exercises)) {
     throw new Error('Formato de respaldo no válido')
   }
-  return { ...defaultState(), ...data } as AppState
+  const base = defaultState()
+  // Respaldos de versiones anteriores pueden no traer los campos nuevos
+  return { ...base, ...data, settings: { ...base.settings, ...data.settings } } as AppState
 }
 
 let counter = 0

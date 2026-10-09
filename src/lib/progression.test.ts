@@ -72,3 +72,31 @@ describe('isStalled / prsIn', () => {
     expect(prsIn(workout([[60, 7]]), prev)).toEqual([])
   })
 })
+
+describe('suggest con RPE', () => {
+  const rated = (sets: [number, number, number][]) => {
+    const w = workout([])
+    w.entries = [{ exerciseId: 'bench', sets: sets.map(([weight, reps, rpe]) => ({ weight, reps, rpe, done: true })) }]
+    return sessionsFor('bench', [w])
+  }
+
+  it('no sube peso si llegó al tope al fallo (RPE 10)', () => {
+    const s = suggest(bench, rated([[60, 10, 9], [60, 10, 9.5], [60, 10, 10]]), 3)
+    expect(s).toMatchObject({ kind: 'reps', weight: 60, reps: 10 })
+  })
+
+  it('sube peso si completó el tope sin llegar al fallo', () => {
+    expect(suggest(bench, rated([[60, 10, 8], [60, 10, 9], [60, 10, 9]]), 3).kind).toBe('up')
+  })
+
+  it('pide +2 reps si todas las series se sintieron fáciles', () => {
+    const s = suggest(bench, rated([[60, 7, 6], [60, 7, 7], [60, 7, 7]]), 3)
+    expect(s).toMatchObject({ kind: 'reps', weight: 60, reps: 9 })
+  })
+
+  it('sin RPE en todas las series mantiene +1 rep', () => {
+    const w = workout([[60, 7], [60, 7]])
+    w.entries[0].sets[0].rpe = 6
+    expect(suggest(bench, sessionsFor('bench', [w]), 2).reps).toBe(8)
+  })
+})

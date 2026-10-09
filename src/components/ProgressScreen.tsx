@@ -3,6 +3,7 @@ import { useStore } from '../lib/store'
 import { bestSet, isBodyweight, isStalled, sessionsFor, weeklySets } from '../lib/progression'
 import { fmtKg, fmtShortDate } from '../lib/format'
 import { LineChart } from './LineChart'
+import { BodyweightCard } from './BodyweightCard'
 
 /** Rango orientativo de series semanales por músculo para hipertrofia. */
 const TARGET_MIN = 10
@@ -34,6 +35,7 @@ export function ProgressScreen() {
           <p>Aún no hay datos.</p>
           <p className="muted">Termina tu primer entreno y aquí verás tus gráficas, récords y alertas.</p>
         </div>
+        <BodyweightCard />
       </div>
     )
   }
@@ -113,6 +115,8 @@ export function ProgressScreen() {
           <p className="muted small">No entrenaste en los últimos 7 días.</p>
         )}
       </section>
+
+      <BodyweightCard />
     </div>
   )
 }

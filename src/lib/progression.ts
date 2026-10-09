@@ -11,6 +11,7 @@ export interface Session {
   workoutId: string
   date: string
   sets: SetLog[]
+  note?: string
 }
 
 /** Sesiones terminadas de un ejercicio, de la más antigua a la más reciente (solo series completadas). */
@@ -21,7 +22,7 @@ export function sessionsFor(exerciseId: string, workouts: Workout[]): Session[] 
     for (const entry of w.entries) {
       if (entry.exerciseId !== exerciseId) continue
       const sets = entry.sets.filter((s) => s.done && s.reps > 0)
-      if (sets.length) sessions.push({ workoutId: w.id, date: w.startedAt, sets })
+      if (sets.length) sessions.push({ workoutId: w.id, date: w.startedAt, sets, note: entry.note })
     }
   }
   return sessions.sort((a, b) => a.date.localeCompare(b.date))
@@ -62,6 +63,8 @@ function topSets(session: Session) {
  *  1. Con el mismo peso, sube reps hasta llegar al tope del rango en todas las series.
  *  2. Cuando lo logras, sube el peso y regresa al mínimo del rango.
  *  3. Si dos sesiones seguidas no llegas al mínimo, baja ~10% (deload).
+ * Con RPE registrado se ajusta: al fallo (RPE 10) no sube aunque completes el rango,
+ * y si todo se sintió fácil (RPE ≤ 7) busca +2 reps en vez de +1.
  */
 export function suggest(ex: Exercise, sessions: Session[], plannedSets: number): Suggestion {
   const last = sessions.at(-1)
@@ -76,6 +79,9 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
 
   const top = topSets(last)
   const minReps = Math.min(...top.sets.map((s) => s.reps))
+  const rpes = top.sets.map((s) => s.rpe).filter((r): r is number => !!r)
+  const allRated = rpes.length === top.sets.length
+  const maxRpe = rpes.length ? Math.max(...rpes) : 0
 
   if (top.weight <= 0) {
     const target = minReps + 1
@@ -106,6 +112,14 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
   }
 
   const completedAll = top.sets.length >= plannedSets && minReps >= ex.repMax
+  if (completedAll && maxRpe >= 10) {
+    return {
+      kind: 'reps',
+      weight: top.weight,
+      reps: ex.repMax,
+      text: `Llegaste a ${ex.repMax} reps pero al fallo (RPE 10). Repite ${top.weight} kg hasta sentirlo en RPE 8–9 y luego sube.`,
+    }
+  }
   if (completedAll) {
     const weight = top.weight + ex.increment
     return {
@@ -116,7 +130,16 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
     }
   }
 
-  const target = Math.min(Math.max(minReps + 1, ex.repMin), ex.repMax)
+  const easy = allRated && maxRpe <= 7
+  const target = Math.min(Math.max(minReps + (easy ? 2 : 1), ex.repMin), ex.repMax)
+  if (easy) {
+    return {
+      kind: 'reps',
+      weight: top.weight,
+      reps: target,
+      text: `Se sintió fácil (RPE ≤ 7): mantén ${top.weight} kg y busca ${target} reps por serie.`,
+    }
+  }
   return {
     kind: 'reps',
     weight: top.weight,

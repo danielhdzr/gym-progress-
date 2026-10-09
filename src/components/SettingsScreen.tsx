@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import type { Exercise } from '../types'
 import { parseState, useStore } from '../lib/store'
-import { defaultState } from '../lib/defaults'
+import { ALL_PLATES, defaultState } from '../lib/defaults'
 import { NumInput } from './NumInput'
 import { useDialog } from './Dialog'
 
@@ -57,6 +57,44 @@ export function SettingsScreen() {
       </section>
 
       <section className="card">
+        <h3>Barra y discos</h3>
+        <p className="muted small">Para la calculadora de discos y las series de calentamiento.</p>
+        <label className="field inline">
+          Peso de la barra (kg)
+          <NumInput
+            decimal
+            ariaLabel="Peso de la barra"
+            value={state.settings.barWeight}
+            onChange={(barWeight) => update((s) => ({ ...s, settings: { ...s.settings, barWeight } }))}
+          />
+        </label>
+        <div className="group-label">Discos disponibles</div>
+        <div className="chips">
+          {ALL_PLATES.map((p) => {
+            const on = state.settings.plates.includes(p)
+            return (
+              <button
+                key={p}
+                className={`chip ${on ? 'on' : ''}`}
+                aria-pressed={on}
+                onClick={() =>
+                  update((s) => ({
+                    ...s,
+                    settings: {
+                      ...s.settings,
+                      plates: on ? s.settings.plates.filter((x) => x !== p) : [...s.settings.plates, p],
+                    },
+                  }))
+                }
+              >
+                {p}
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      <section className="card">
         <h3>Ejercicios</h3>
         <p className="muted small">
           Rango de reps y cuánto subir de peso. Cuando completas el máximo de reps en todas las series, la app te sugiere subir.
@@ -105,7 +143,7 @@ export function SettingsScreen() {
         </button>
       </section>
 
-      <p className="muted small center">Gym Progress · v0.1</p>
+      <p className="muted small center">Gym Progress · v0.2</p>
     </div>
   )
 }
