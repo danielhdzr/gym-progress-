@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import { ChevronDown, Settings } from 'lucide-react'
 import { useStore } from '../lib/store'
 import {
-  SEASONS,
   TIME_THEME,
   countryInfo,
   occasionFor,
@@ -72,34 +72,53 @@ export function AmbienceStyle() {
   return <style>{css}</style>
 }
 
-/** Encabezado de inicio: degradado según hora u ocasión, saludo, mensaje especial y estación. */
-export function AmbienceHero({ greeting, message }: { greeting: string; message: string }) {
+/**
+ * Encabezado de Inicio: dos líneas como máximo.
+ *  1. Saludo con emoji de la hora.
+ *  2. La versión corta de la fecha especial o, si no hay, una línea de datos.
+ * Si la ocasión tiene más que decir, al tocar se despliega el mensaje completo.
+ */
+export function AmbienceHero({ greeting, dataLine, onSettings }: { greeting: string; dataLine: string; onSettings: () => void }) {
   const a = useAmbience()
-  const season = SEASONS[a.season]
+  const [open, setOpen] = useState(false)
+  const o = a.occasion
+  const expandable = !!o && (o.message !== o.short || !!o.detail)
 
-  if (!a.enabled) {
-    return (
-      <header className="hello">
-        <h1>{greeting} 👋</h1>
-        <p className="muted">{message}</p>
-      </header>
-    )
-  }
+  const settingsButton = (
+    <button className="icon-btn" onClick={onSettings} aria-label="Ajustes">
+      <Settings size={22} aria-hidden />
+    </button>
+  )
 
   return (
-    <header className="hero" style={{ '--g1': a.gradient[0], '--g2': a.gradient[1] } as React.CSSProperties}>
-      <div className="hero-top">
-        <span className="hero-chip">{season.emoji} {season.name}</span>
+    <header
+      className={a.enabled ? 'hero' : 'hero plain'}
+      style={a.enabled ? ({ '--g1': a.gradient[0], '--g2': a.gradient[1] } as React.CSSProperties) : undefined}
+    >
+      <div className="hero-row">
+        <h1>
+          {greeting} {a.enabled ? TIME_THEME[a.time].emoji : '👋'}
+        </h1>
+        {settingsButton}
       </div>
-      <h1>{greeting} {TIME_THEME[a.time].emoji}</h1>
-      {a.occasion ? (
-        <>
-          <p className="hero-occasion">{a.occasion.message}</p>
-          {a.occasion.detail && <p className="hero-detail">{a.occasion.detail}</p>}
-          <p className="hero-sub">{message}</p>
-        </>
+      {o ? (
+        expandable ? (
+          <button className="hero-line hero-occasion" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+            {o.short}
+            <span className="hero-more">{open ? 'Ver menos' : 'Ver más'} <ChevronDown size={16} className={open ? 'flip' : ''} aria-hidden /></span>
+          </button>
+        ) : (
+          <p className="hero-line hero-occasion">{o.short}</p>
+        )
       ) : (
-        <p className="hero-sub">{message}</p>
+        <p className="hero-line">{dataLine}</p>
+      )}
+      {o && open && (
+        <div className="hero-expand">
+          <p>{o.message}</p>
+          {o.detail && <p>{o.detail}</p>}
+          <p className="muted small">{dataLine}</p>
+        </div>
       )}
     </header>
   )

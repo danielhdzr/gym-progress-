@@ -51,7 +51,7 @@ export function WorkoutLogEditor({ workout, isNew, onClose, onSaved }: Props) {
   }
 
   return (
-    <div className="screen">
+    <div className="screen narrow">
       <header className="workout-head">
         <button className="ghost" onClick={onClose}>‹ Cancelar</button>
         <button className="primary" onClick={save}>Guardar</button>

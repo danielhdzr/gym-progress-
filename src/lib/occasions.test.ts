@@ -163,3 +163,22 @@ describe('previewNow', () => {
     expect(Math.abs(previewNow('?fecha=basura').getTime() - Date.now())).toBeLessThan(1000)
   })
 })
+
+describe('versión corta para el encabezado', () => {
+  it('todas las ocasiones caben en una línea y no repiten el nombre', () => {
+    const days: Date[] = []
+    for (let d = new Date(2026, 0, 1); d.getFullYear() === 2026; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)) days.push(d)
+    const extra = { birthday: '1995-06-10', trainingStart: '2025-03-15', workouts: [w('2025-03-15', 50, 8), w('2025-06-01', 60, 8)], exercises: [bench] }
+    const countries = ['MX', 'US', 'CO', 'AR', 'CL', 'PE', 'ES'] as const
+    let checked = 0
+    for (const country of countries)
+      for (const now of days) {
+        const o = occasionFor(base(now, { ...extra, country }))
+        if (!o) continue
+        checked++
+        expect(o.short.length, o.short).toBeLessThanOrEqual(52)
+        expect(o.short).not.toContain('Daniel')
+      }
+    expect(checked).toBeGreaterThan(50)
+  })
+})

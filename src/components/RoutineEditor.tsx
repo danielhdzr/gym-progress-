@@ -31,7 +31,7 @@ export function RoutineEditor({ routine, onSave, onDelete, onClose }: Props) {
     })
 
   return (
-    <div className="screen">
+    <div className="screen narrow">
       <header className="workout-head">
         <button className="ghost" onClick={onClose}>‹ Volver</button>
         <button className="primary" onClick={() => onSave({ ...draft, name: draft.name.trim() || 'Rutina' })}>

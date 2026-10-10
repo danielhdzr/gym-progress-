@@ -56,6 +56,8 @@ export interface Settings {
   country: CountryCode
   /** Colores y mensajes según hora, estación y fechas especiales */
   seasonalThemes: boolean
+  /** Meta de días activos por semana (pesas o cardio); 0 = sin meta */
+  weeklyGoalDays: number
   /** YYYY-MM-DD o "" */
   birthday: string
   /** Desde cuándo entrenas, YYYY-MM-DD o "" (vacío = fecha del primer entreno) */

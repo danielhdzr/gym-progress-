@@ -39,7 +39,7 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
   const doneSets = workout.entries.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0)
 
   return (
-    <div className="screen">
+    <div className="screen narrow">
       <header className="workout-head">
         <div>
           <h1>{workout.name}</h1>

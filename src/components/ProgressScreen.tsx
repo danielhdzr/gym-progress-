@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '../lib/store'
 import { bestSet, isBodyweight, isStalled, sessionsFor, weeklySets } from '../lib/progression'
 import { fmtKg, fmtShortDate } from '../lib/format'
@@ -25,8 +25,13 @@ function scoreInfo(metric: Metric, bodyweight: boolean) {
     : { label: `Carga × ${what}`, unit: `kg·${u}`, fmt: (v: number) => `${Math.round(v)} kg·${u}`, caption: `Peso × ${what} de tu mejor serie por sesión` }
 }
 
-export function ProgressScreen() {
+export function ProgressScreen({ header, focusRecords = false }: { header?: React.ReactNode; focusRecords?: boolean }) {
   const { state } = useStore()
+  const recordsRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (focusRecords) recordsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [focusRecords])
 
   const trained = useMemo(
     () =>
@@ -46,7 +51,7 @@ export function ProgressScreen() {
   if (!trained.length) {
     return (
       <div className="screen">
-        <h1>Progreso</h1>
+        {header}
         <div className="empty">
           <p>Aún no hay datos.</p>
           <p className="muted">Termina tu primer entreno y aquí verás tus gráficas, récords y alertas.</p>
@@ -68,7 +73,27 @@ export function ProgressScreen() {
 
   return (
     <div className="screen">
-      <h1>Progreso</h1>
+      {header}
+
+      <section className="card" ref={recordsRef}>
+        <h3>🏆 Récords personales</h3>
+        {trained.slice(0, 8).map(({ ex, sessions }) => {
+          const m = metricOf(ex)
+          const info = scoreInfo(m, isBodyweight(sessions))
+          const best = sessions
+            .map((s) => ({ date: s.date, ...bestSet(s.sets, m) }))
+            .reduce((a, b) => (b.score > a.score ? b : a))
+          return (
+            <button key={ex.id} className="history-line record-row" onClick={() => setSelected(ex.id)}>
+              <span>{ex.name}</span>
+              <span>
+                <strong>{info.fmt(best.score)}</strong> <span className="muted small">{fmtShortDate(best.date)}</span>
+              </span>
+            </button>
+          )
+        })}
+        <p className="muted small">Toca uno para ver su gráfica. Pesas: 1RM estimado de tu mejor serie.</p>
+      </section>
 
       {stalled.length > 0 && (
         <section className="card alert">

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { ArrowLeft } from 'lucide-react'
 import type { CountryCode, Exercise, Settings } from '../types'
 import { parseState, useStore } from '../lib/store'
 import { ALL_PLATES, defaultState } from '../lib/defaults'
@@ -10,7 +11,7 @@ import { metricOf, unitHeader } from '../lib/metric'
 import { COUNTRIES } from '../lib/occasions'
 import { toYmd } from '../lib/format'
 
-export function SettingsScreen() {
+export function SettingsScreen({ onBack }: { onBack?: () => void }) {
   const { state, update } = useStore()
   const dialog = useDialog()
   const fileRef = useRef<HTMLInputElement>(null)
@@ -47,8 +48,15 @@ export function SettingsScreen() {
   }
 
   return (
-    <div className="screen">
-      <h1>Ajustes</h1>
+    <div className="screen narrow">
+      <header className="page-head with-back">
+        {onBack && (
+          <button className="icon-btn" onClick={onBack} aria-label="Volver">
+            <ArrowLeft aria-hidden />
+          </button>
+        )}
+        <h1>Ajustes</h1>
+      </header>
 
       <section className="card">
         <label className="field">
@@ -232,7 +240,7 @@ export function SettingsScreen() {
         </button>
       </section>
 
-      <p className="muted small center">Gym Progress · v0.8</p>
+      <p className="muted small center">Gym Progress · v0.9</p>
 
       {editingEx && (
         <div className="sheet-backdrop" onClick={() => setEditingEx(null)}>

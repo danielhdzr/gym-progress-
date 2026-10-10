@@ -8,11 +8,11 @@ import { fmtSet, metricOf } from '../lib/metric'
 import { fmtKcal, workoutKcal } from '../lib/calories'
 import { WorkoutLogEditor } from './WorkoutLogEditor'
 
-export function HistoryScreen() {
+export function HistoryScreen({ header, autoOpenPast = false }: { header?: React.ReactNode; autoOpenPast?: boolean }) {
   const { state, update } = useStore()
   const dialog = useDialog()
   const [editing, setEditing] = useState<{ workout: Workout; isNew: boolean } | null>(null)
-  const [creating, setCreating] = useState(false)
+  const [creating, setCreating] = useState(autoOpenPast)
   const [saved, setSaved] = useState<{ name: string; prs: string[] } | null>(null)
 
   const nameOf = (id: string) => state.exercises.find((e) => e.id === id)?.name ?? '—'
@@ -35,7 +35,7 @@ export function HistoryScreen() {
 
   return (
     <div className="screen">
-      <h1>Historial</h1>
+      {header}
 
       <button className="secondary full" onClick={() => setCreating(true)}>+ Registrar entreno pasado</button>
 

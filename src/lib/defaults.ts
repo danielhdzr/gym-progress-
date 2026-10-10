@@ -90,6 +90,7 @@ export const ALL_PLATES = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5]
 export const DEFAULT_SETTINGS: Settings = {
   country: 'MX',
   seasonalThemes: true,
+  weeklyGoalDays: 3,
   birthday: '',
   trainingStart: '',
   userName: '',

@@ -7,15 +7,13 @@ import { ActiveWorkout } from './ActiveWorkout'
 import { RoutineEditor } from './RoutineEditor'
 import { useDialog } from './Dialog'
 import { useRestTimer } from './RestTimer'
-import { finishMessage, greeting, homeMessage } from '../lib/motivation'
-import { AmbienceHero, useAmbience } from './Ambience'
+import { finishMessage } from '../lib/motivation'
 import { fmtKcal, workoutKcal } from '../lib/calories'
 
 export function TrainScreen() {
   const { state, update } = useStore()
   const dialog = useDialog()
   const rest = useRestTimer()
-  const ambience = useAmbience()
   const [editing, setEditing] = useState<Routine | null>(null)
   const [summary, setSummary] = useState<{ workout: Workout; prs: string[] } | null>(null)
 
@@ -77,7 +75,7 @@ export function TrainScreen() {
   const lastByRoutine = new Map<string, string>()
   for (const w of state.workouts) if (w.routineId) lastByRoutine.set(w.routineId, w.startedAt)
 
-  const { userName, namePrompted } = state.settings
+  const { userName } = state.settings
   const finish = summary && finishMessage(userName, summary.prs.length, state.workouts.length)
 
   const begin = (routine: Routine | null) =>
@@ -85,10 +83,11 @@ export function TrainScreen() {
 
   return (
     <div className="screen">
-      {/* El nombre ya va en el saludo: no lo repetimos en la frase */}
-      <AmbienceHero greeting={greeting(userName, ambience.now, '')} message={homeMessage('', state.workouts, ambience.now)} />
+      <header className="page-head">
+        <h1>Pesas</h1>
+        <p className="muted">Elige una rutina para empezar, o arma la tuya.</p>
+      </header>
 
-      {!namePrompted && <NamePrompt />}
 
       {summary && finish && (
         <section className="card summary">
@@ -110,6 +109,7 @@ export function TrainScreen() {
         </section>
       )}
 
+      <div className="cards-grid">
       {state.routines.map((r) => (
         <section key={r.id} className="card routine">
           <div className="card-head">
@@ -125,6 +125,7 @@ export function TrainScreen() {
           <button className="primary full" onClick={() => begin(r)} disabled={!r.items.length}>Empezar</button>
         </section>
       ))}
+      </div>
 
       <div className="row2">
         <button className="secondary" onClick={() => setEditing({ id: uid(), name: 'Nueva rutina', items: [] })}>
@@ -137,7 +138,7 @@ export function TrainScreen() {
 }
 
 /** Pregunta el nombre una sola vez para personalizar los mensajes. */
-function NamePrompt() {
+export function NamePrompt() {
   const { update } = useStore()
   const [name, setName] = useState('')
   const save = (userName: string) =>

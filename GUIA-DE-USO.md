@@ -61,9 +61,21 @@ Es gratis, no necesita cuenta y **tus datos se quedan solo en tu teléfono**.
 
 ---
 
+## 🧭 Cómo está organizada la app
+
+| Sección | Para qué |
+|---|---|
+| 🏠 **Inicio** | Lo que te toca hoy, accesos rápidos (cardio, peso, entreno pasado, récords) y tu semana |
+| 🏋️ **Pesas** | Tus rutinas: empezar, crear o editar |
+| 👣 **Cardio** | Caminatas y carreras |
+| 📈 **Progreso** | Gráficas, récords e **Historial** de entrenos |
+| ⚙️ **Ajustes** | Engrane arriba a la derecha en Inicio (en computadora, en el menú lateral) |
+
+En computadora y tableta la app aprovecha la pantalla: menú lateral y tarjetas en columnas.
+
 ## 🏁 Tu primer entreno
 
-1. En **Entrenar**, elige una rutina y toca **"Empezar"**.
+1. En **Inicio** verás **"Hoy te toca"** con la rutina que sigue; toca **"Empezar entreno"**. Para elegir otra, ve a **Pesas**.
    - Hay 3 rutinas de ejemplo (Push, Pull, Legs). Puedes editarlas o crear las tuyas con **"+ Nueva rutina"**.
 2. **La primera vez** que hagas un ejercicio, escribe el peso con el que logres hacer las repeticiones indicadas con buena técnica.
 3. Después de cada serie, ajusta el peso y las reps si hace falta y toca **✓**.
@@ -141,7 +153,7 @@ En **Ajustes → Ejercicios** toca el nombre de un ejercicio para cambiar su nom
 - **+kg**: cuánto subir cada vez. Usa 1–2 kg en ejercicios pequeños (laterales, curl) y 2.5–5 kg en los grandes (sentadilla, peso muerto).
 
 ### 🎉 Temas de temporada y fechas especiales
-El encabezado de **Entrenar** cambia de color según la **hora** (🌅 mañana, ☀️ tarde, 🌙 noche) y muestra la **estación** del año. En fechas especiales cambia el color de la app y aparece un mensaje:
+El encabezado de **Inicio** cambia de color según la **hora** (🌅 mañana, ☀️ tarde, 🌙 noche) y muestra la **estación** del año. En fechas especiales cambia el color de la app y aparece un mensaje:
 - **Festivos:** Año Nuevo, San Valentín, Pascua, Halloween, Navidad y fin de año, más los de tu país (en México: 15–16 de septiembre, Día de Muertos y 20 de noviembre).
 - **Inicio de cada estación** (equinoccios y solsticios), según tu hemisferio.
 - **Tu cumpleaños**, **cada mes que cumples entrenando** (con tu mejor avance) y **tu aniversario** (con tus entrenos, récords y km).
@@ -149,10 +161,10 @@ El encabezado de **Entrenar** cambia de color según la **hora** (🌅 mañana, 
 Configúralo en **Ajustes → Temas de temporada**: país, cumpleaños y la fecha en que empezaste a entrenar. Si no pones esa fecha, se usa la de tu primer entreno. También puedes desactivar los temas ahí.
 
 ### ¿Olvidaste anotar un entreno?
-Ve a **Historial → "+ Registrar entreno pasado"**, elige el día y la rutina, y escribe lo que hiciste. Aquí no hace falta marcar ✓: se guarda toda serie con reps.
+En **Inicio** toca **"Anotar entreno pasado"** (o ve a **Progreso → Historial → "+ Registrar entreno pasado"**), elige el día y la rutina, y escribe lo que hiciste. Aquí no hace falta marcar ✓: se guarda toda serie con reps.
 
 ### ¿Te equivocaste al anotar?
-En **Historial**, abre el entreno y toca **"Editar"**. Corrige errores lo antes posible: un dato equivocado (por ejemplo, 600 kg en vez de 60) afecta las sugerencias siguientes.
+En **Progreso → Historial**, abre el entreno y toca **"Editar"**. Corrige errores lo antes posible: un dato equivocado (por ejemplo, 600 kg en vez de 60) afecta las sugerencias siguientes.
 
 ### Revisa tu progreso cada semana
 En **Progreso** verás:
@@ -170,7 +182,7 @@ Tus datos **solo existen en tu teléfono**. No hay nube ni cuenta. Se pierden si
 - Cambias o pierdes tu teléfono.
 
 **Haz un respaldo cada 2–4 semanas:**
-1. **Ajustes → "Exportar respaldo"**. Se descarga un archivo `gym-progress-FECHA.json`.
+1. **Ajustes (⚙️) → "Exportar respaldo"**. Se descarga un archivo `gym-progress-FECHA.json`.
    - **iPhone:** se guarda en la app **Archivos** (carpeta Descargas).
    - **Android:** se guarda en la carpeta **Descargas**.
 2. Guarda ese archivo en un lugar seguro: Google Drive, iCloud, correo, etc.
@@ -215,10 +227,10 @@ No. Todo se guarda en tu dispositivo. La app no tiene servidor ni recopila infor
 Sí, pero cada uno tiene sus propios datos. Usa **Exportar / Importar** para pasar tu historial.
 
 **Marqué series pero no se guardaron.**
-Revisa que cada serie tenga ✓ antes de tocar **"Terminar"**. Las series sin ✓ no se guardan. Si ya terminaste, puedes agregarlas con **Historial → Editar**.
+Revisa que cada serie tenga ✓ antes de tocar **"Terminar"**. Las series sin ✓ no se guardan. Si ya terminaste, puedes agregarlas con **Progreso → Historial → Editar**.
 
 **La sugerencia de peso no tiene sentido.**
-Casi siempre se debe a un dato mal anotado en un entreno anterior. Corrígelo en **Historial → Editar**.
+Casi siempre se debe a un dato mal anotado en un entreno anterior. Corrígelo en **Progreso → Historial → Editar**.
 
 **El temporizador no sonó.**
 - iPhone: revisa el interruptor de silencio y que la app estaba abierta en pantalla.

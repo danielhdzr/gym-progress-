@@ -132,17 +132,20 @@ interface Holiday {
   countries?: CountryCode[]
   /** ¿Cae en esta fecha? */
   on: (d: Date) => boolean
-  /** Tres tonos: humor fitness, inspirador y saludo simple. `n` = ", Daniel" o "". */
-  messages: (n: string) => [string, string, string]
+  /** Tres tonos (humor fitness, inspirador, saludo simple) como [mensaje completo, versión corta]. `n` = ", Daniel" o "". */
+  messages: (n: string) => [Msg, Msg, Msg]
 }
+
+/** [mensaje completo, versión corta para el encabezado] */
+type Msg = [string, string]
 
 const fixed = (month: number, ...days: number[]) => (d: Date) => d.getMonth() + 1 === month && days.includes(d.getDate())
 
 /** Mensajes para fiestas patrias, con nombre de la fiesta y bandera. */
-const national = (name: string, flag: string) => (n: string): [string, string, string] => [
-  `${flag} ¡Feliz ${name}${n}! Hoy se celebra en grande… después de entrenar 💪`,
-  `${flag} ¡Feliz ${name}${n}! Que tu disciplina sea tan grande como tu orgullo por tu tierra.`,
-  `${flag} ¡Feliz ${name}${n}!`,
+const national = (name: string, flag: string) => (n: string): [Msg, Msg, Msg] => [
+  [`${flag} ¡Feliz ${name}${n}! Hoy se celebra en grande… después de entrenar 💪`, `${flag} Hoy se celebra… después de entrenar`],
+  [`${flag} ¡Feliz ${name}${n}! Que tu disciplina sea tan grande como tu orgullo por tu tierra.`, `${flag} Disciplina tan grande como tu orgullo`],
+  [`${flag} ¡Feliz ${name}${n}!`, `${flag} ¡Feliz ${name}!`],
 ]
 
 export const HOLIDAYS: Holiday[] = [
@@ -152,9 +155,9 @@ export const HOLIDAYS: Holiday[] = [
     palette: P.gold,
     on: fixed(1, 1, 2),
     messages: (n) => [
-      `🎆 ¡Feliz Año Nuevo${n}! Propósito #1: que el gym no sea solo de enero.`,
-      `🎆 ¡Feliz Año Nuevo${n}! Que este sea el año de tus mejores marcas.`,
-      `🎆 ¡Feliz Año Nuevo${n}!`,
+      [`🎆 ¡Feliz Año Nuevo${n}! Propósito #1: que el gym no sea solo de enero.`, '🎆 Que el gym no sea solo de enero'],
+      [`🎆 ¡Feliz Año Nuevo${n}! Que este sea el año de tus mejores marcas.`, '🎆 El año de tus mejores marcas'],
+      [`🎆 ¡Feliz Año Nuevo${n}!`, '🎆 ¡Feliz Año Nuevo!'],
     ],
   },
   {
@@ -163,9 +166,9 @@ export const HOLIDAYS: Holiday[] = [
     palette: P.pink,
     on: fixed(2, 14),
     messages: (n) => [
-      `❤️ ¡Feliz San Valentín${n}! Tu relación más estable: tú y las pesas.`,
-      `❤️ ¡Feliz San Valentín${n}! Quererte también es cuidarte.`,
-      `❤️ ¡Feliz San Valentín${n}!`,
+      [`❤️ ¡Feliz San Valentín${n}! Tu relación más estable: tú y las pesas.`, '❤️ Tu relación más estable: las pesas'],
+      [`❤️ ¡Feliz San Valentín${n}! Quererte también es cuidarte.`, '❤️ Quererte también es cuidarte'],
+      [`❤️ ¡Feliz San Valentín${n}!`, '❤️ ¡Feliz San Valentín!'],
     ],
   },
   {
@@ -174,9 +177,9 @@ export const HOLIDAYS: Holiday[] = [
     palette: P.sky,
     on: fixed(4, 6),
     messages: (n) => [
-      `🏃 Hoy es el Día Mundial de la Actividad Física${n}. Tú lo celebras casi diario 😎`,
-      `🏃 Día Mundial de la Actividad Física: cada entreno cuenta${n}. ¡Celébralo moviéndote!`,
-      `🏃 ¡Feliz Día Mundial de la Actividad Física${n}!`,
+      [`🏃 Hoy es el Día Mundial de la Actividad Física${n}. Tú lo celebras casi diario 😎`, '🏃 Día de la Actividad Física: tú ya cumples'],
+      [`🏃 Día Mundial de la Actividad Física: cada entreno cuenta${n}. ¡Celébralo moviéndote!`, '🏃 Hoy cada movimiento cuenta'],
+      [`🏃 ¡Feliz Día Mundial de la Actividad Física${n}!`, '🏃 Día Mundial de la Actividad Física'],
     ],
   },
   {
@@ -185,9 +188,9 @@ export const HOLIDAYS: Holiday[] = [
     palette: P.lilac,
     on: (d) => sameDay(d, easterSunday(d.getFullYear())),
     messages: (n) => [
-      `🐣 ¡Felices Pascuas${n}! Que lo único que escondas hoy sean los huevos, no las ganas de entrenar.`,
-      `🐣 ¡Felices Pascuas${n}! Buen día para renacer y empezar una nueva racha.`,
-      `🐣 ¡Felices Pascuas${n}!`,
+      [`🐣 ¡Felices Pascuas${n}! Que lo único que escondas hoy sean los huevos, no las ganas de entrenar.`, '🐣 Esconde huevos, no las ganas de entrenar'],
+      [`🐣 ¡Felices Pascuas${n}! Buen día para renacer y empezar una nueva racha.`, '🐣 Buen día para empezar una nueva racha'],
+      [`🐣 ¡Felices Pascuas${n}!`, '🐣 ¡Felices Pascuas!'],
     ],
   },
   {
@@ -196,9 +199,9 @@ export const HOLIDAYS: Holiday[] = [
     palette: P.orange,
     on: fixed(10, 31),
     messages: (n) => [
-      `🎃 ¡Feliz Halloween${n}! Lo único que debería dar miedo es saltarte el día de pierna.`,
-      `🎃 ¡Feliz Halloween${n}! Disfrázate de la mejor versión de ti.`,
-      `🎃 ¡Feliz Halloween${n}!`,
+      [`🎃 ¡Feliz Halloween${n}! Lo único que debería dar miedo es saltarte el día de pierna.`, '🎃 Lo único que da miedo: saltarte pierna'],
+      [`🎃 ¡Feliz Halloween${n}! Disfrázate de la mejor versión de ti.`, '🎃 Disfrázate de tu mejor versión'],
+      [`🎃 ¡Feliz Halloween${n}!`, '🎃 ¡Feliz Halloween!'],
     ],
   },
   {
@@ -207,9 +210,9 @@ export const HOLIDAYS: Holiday[] = [
     palette: P.red,
     on: fixed(12, 24, 25),
     messages: (n) => [
-      `🎄 ¡Feliz Navidad${n}! Hoy los carbohidratos son parte del plan.`,
-      `🎄 ¡Feliz Navidad${n}! El mejor regalo que te has dado este año es cuidarte.`,
-      `🎄 ¡Feliz Navidad${n}!`,
+      [`🎄 ¡Feliz Navidad${n}! Hoy los carbohidratos son parte del plan.`, '🎄 Hoy los carbohidratos son parte del plan'],
+      [`🎄 ¡Feliz Navidad${n}! El mejor regalo que te has dado este año es cuidarte.`, '🎄 Tu mejor regalo: cuidarte'],
+      [`🎄 ¡Feliz Navidad${n}!`, '🎄 ¡Feliz Navidad!'],
     ],
   },
   {
@@ -218,9 +221,9 @@ export const HOLIDAYS: Holiday[] = [
     palette: P.gold,
     on: fixed(12, 31),
     messages: (n) => [
-      `🥂 Último día del año${n}: el entreno de hoy es oficialmente legendario.`,
-      `🥂 Gracias por no rendirte este año${n}. Lo mejor viene.`,
-      `🥂 ¡Feliz fin de año${n}!`,
+      [`🥂 Último día del año${n}: el entreno de hoy es oficialmente legendario.`, '🥂 Último entreno del año: legendario'],
+      [`🥂 Gracias por no rendirte este año${n}. Lo mejor viene.`, '🥂 Gracias por no rendirte este año'],
+      [`🥂 ¡Feliz fin de año${n}!`, '🥂 ¡Feliz fin de año!'],
     ],
   },
   // México
@@ -231,9 +234,9 @@ export const HOLIDAYS: Holiday[] = [
     countries: ['MX'],
     on: fixed(9, 15, 16),
     messages: (n) => [
-      `🇲🇽 ¡Viva México${n}! Hoy se vale el pozole… mañana, sentadillas.`,
-      `🇲🇽 ¡Viva México${n}! Que tu disciplina sea tan grande como nuestra historia.`,
-      `🇲🇽 ¡Feliz día de la Independencia${n}!`,
+      [`🇲🇽 ¡Viva México${n}! Hoy se vale el pozole… mañana, sentadillas.`, '🇲🇽 Hoy pozole, mañana sentadillas'],
+      [`🇲🇽 ¡Viva México${n}! Que tu disciplina sea tan grande como nuestra historia.`, '🇲🇽 Disciplina tan grande como nuestra historia'],
+      [`🇲🇽 ¡Feliz día de la Independencia${n}!`, '🇲🇽 ¡Viva México!'],
     ],
   },
   {
@@ -243,9 +246,9 @@ export const HOLIDAYS: Holiday[] = [
     countries: ['MX'],
     on: fixed(11, 1, 2),
     messages: (n) => [
-      `💀 ¡Feliz Día de Muertos${n}! Que lo único muerto hoy sean tus excusas.`,
-      `💀 Día de Muertos${n}: la mejor forma de honrar a quienes ya no están es vivir plenamente.`,
-      `💀 ¡Feliz Día de Muertos${n}!`,
+      [`💀 ¡Feliz Día de Muertos${n}! Que lo único muerto hoy sean tus excusas.`, '💀 Que lo único muerto sean tus excusas'],
+      [`💀 Día de Muertos${n}: la mejor forma de honrar a quienes ya no están es vivir plenamente.`, '💀 Honrarlos es vivir plenamente'],
+      [`💀 ¡Feliz Día de Muertos${n}!`, '💀 ¡Feliz Día de Muertos!'],
     ],
   },
   {
@@ -255,9 +258,9 @@ export const HOLIDAYS: Holiday[] = [
     countries: ['MX'],
     on: fixed(11, 20),
     messages: (n) => [
-      `🇲🇽 Día de la Revolución${n}: revoluciona tu rutina con día de pierna.`,
-      `🇲🇽 Día de la Revolución${n}: todo gran cambio empieza con una decisión.`,
-      `🇲🇽 ¡Feliz Día de la Revolución${n}!`,
+      [`🇲🇽 Día de la Revolución${n}: revoluciona tu rutina con día de pierna.`, '🇲🇽 Revoluciona tu rutina: día de pierna'],
+      [`🇲🇽 Día de la Revolución${n}: todo gran cambio empieza con una decisión.`, '🇲🇽 Todo gran cambio empieza con una decisión'],
+      [`🇲🇽 ¡Feliz Día de la Revolución${n}!`, '🇲🇽 ¡Feliz Día de la Revolución!'],
     ],
   },
   // Otros países
@@ -269,9 +272,9 @@ export const HOLIDAYS: Holiday[] = [
     countries: ['US'],
     on: (d) => sameDay(d, nthWeekday(d.getFullYear(), 11, 4, 4)),
     messages: (n) => [
-      `🦃 ¡Feliz Día de Acción de Gracias${n}! Hoy el pavo no cuenta; mañana el cardio sí.`,
-      `🦃 ¡Feliz Día de Acción de Gracias${n}! Agradece a tu cuerpo todo lo que puede hacer.`,
-      `🦃 ¡Feliz Día de Acción de Gracias${n}!`,
+      [`🦃 ¡Feliz Día de Acción de Gracias${n}! Hoy el pavo no cuenta; mañana el cardio sí.`, '🦃 Hoy el pavo no cuenta; mañana el cardio sí'],
+      [`🦃 ¡Feliz Día de Acción de Gracias${n}! Agradece a tu cuerpo todo lo que puede hacer.`, '🦃 Agradece todo lo que tu cuerpo puede hacer'],
+      [`🦃 ¡Feliz Día de Acción de Gracias${n}!`, '🦃 ¡Feliz Acción de Gracias!'],
     ],
   },
   { id: 'co-independence', emoji: '🇨🇴', palette: P.yellow, countries: ['CO'], on: fixed(7, 20), messages: national('Día de la Independencia', '🇨🇴') },
@@ -286,6 +289,7 @@ export const HOLIDAYS: Holiday[] = [
 const DAY = 24 * 60 * 60 * 1000
 const dayIndex = (d: Date) => Math.floor(new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() / DAY)
 const pick = <T,>(list: T[], seed: number) => list[((seed % list.length) + list.length) % list.length]
+const msg = ([message, short]: Msg) => ({ message, short })
 const withName = (name: string) => (name.trim() ? `, ${name.trim()}` : '')
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`
 
@@ -369,7 +373,10 @@ export function trainingStats(workouts: Workout[], exercises: Exercise[], cardio
 export interface Occasion {
   id: string
   emoji: string
+  /** Mensaje completo (se ve al tocar el encabezado) */
   message: string
+  /** Una línea para el encabezado, sin el nombre (ya va en el saludo) */
+  short: string
   /** Línea secundaria (p. ej. tu mejor avance) */
   detail?: string
   palette: Palette
@@ -416,13 +423,15 @@ export function occasionFor(input: OccasionInput): Occasion | null {
         id: 'birthday',
         emoji: '🎂',
         palette: P.magenta,
-        message: pick(
-          [
-            `🎂 ¡Feliz cumpleaños${n}! Es un orgullo acompañarte en este viaje.`,
-            `🎂 ¡Feliz cumpleaños${n}! Un año más fuerte que el anterior. Hoy el mejor ejercicio es disfrutar.`,
-            `🎂 ¡Feliz cumpleaños${n}! Hoy el pastel no cuenta como trampa. Mañana lo quemamos 💪`,
-          ],
-          year,
+        ...msg(
+          pick<Msg>(
+            [
+              [`🎂 ¡Feliz cumpleaños${n}! Es un orgullo acompañarte en este viaje.`, '🎂 ¡Feliz cumpleaños! Un orgullo acompañarte'],
+              [`🎂 ¡Feliz cumpleaños${n}! Un año más fuerte que el anterior. Hoy el mejor ejercicio es disfrutar.`, '🎂 ¡Feliz cumpleaños! Un año más fuerte'],
+              [`🎂 ¡Feliz cumpleaños${n}! Hoy el pastel no cuenta como trampa. Mañana lo quemamos 💪`, '🎂 ¡Feliz cumpleaños! Hoy el pastel no es trampa'],
+            ],
+            year,
+          ),
         ),
       }
     }
@@ -445,6 +454,7 @@ export function occasionFor(input: OccasionInput): Occasion | null {
         id: 'anniversary',
         emoji: '🏆',
         palette: P.gold,
+        short: `🏆 ¡${t} entrenando! Feliz aniversario`,
         message: pick(
           [
             `🏆 ¡${t} entrenando${n}! ${dataText}. Mira todo lo que has construido.`,
@@ -460,6 +470,7 @@ export function occasionFor(input: OccasionInput): Occasion | null {
         id: 'monthiversary',
         emoji: '📅',
         palette: P.gold,
+        short: `📅 ¡${fmtMonths(months)} entrenando!`,
         message: stageMessage(months, n),
         detail: bestImprovement(workouts, exercises) ?? undefined,
       }
@@ -472,13 +483,14 @@ export function occasionFor(input: OccasionInput): Occasion | null {
   ]
   const holiday = holidays.find((h) => h.on(now))
   if (holiday) {
-    return { id: holiday.id, emoji: holiday.emoji, palette: holiday.palette, message: pick(holiday.messages(n), seed) }
+    return { id: holiday.id, emoji: holiday.emoji, palette: holiday.palette, ...msg(pick(holiday.messages(n), seed)) }
   }
 
   const south = countryInfo(country).south
   const starting = seasonStartingToday(now, south)
   if (starting) {
     const { name, emoji } = SEASONS[starting.season]
+    const article = starting.season === 'summer' || starting.season === 'winter' ? 'el' : 'la'
     const tips: Record<Season, string> = {
       spring: 'buen momento para renovar tu rutina',
       summer: 'hidrátate bien y aprovecha los días largos',
@@ -489,7 +501,8 @@ export function occasionFor(input: OccasionInput): Occasion | null {
       id: `season-${starting.season}`,
       emoji,
       palette: { spring: P.pink, summer: P.yellow, autumn: P.orange, winter: P.sky }[starting.season],
-      message: `${emoji} Hoy empieza ${starting.season === 'summer' || starting.season === 'winter' ? 'el' : 'la'} ${name.toLowerCase()} (${starting.kind})${n}: ${tips[starting.season]}.`,
+      short: `${emoji} Hoy empieza ${article} ${name.toLowerCase()}`,
+      message: `${emoji} Hoy empieza ${article} ${name.toLowerCase()} (${starting.kind})${n}: ${tips[starting.season]}.`,
     }
   }
 
