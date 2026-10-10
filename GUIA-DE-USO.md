@@ -69,9 +69,11 @@ Es gratis, no necesita cuenta y **tus datos se quedan solo en tu teléfono**.
 | 🏋️ **Pesas** | Tus rutinas: empezar, crear o editar |
 | 👣 **Cardio** | Caminatas y carreras |
 | 📈 **Progreso** | Gráficas, récords e **Historial** de entrenos |
-| ⚙️ **Ajustes** | Engrane arriba a la derecha en Inicio (en computadora, en el menú lateral) |
+| ⚙️ **Ajustes** | Engrane arriba a la derecha en Inicio (en computadora, en el menú lateral). Organizado en: Perfil, Entrenamiento, Barra y discos, Ejercicios, Apariencia, Mis datos y Ayuda |
 
 En computadora y tableta la app aprovecha la pantalla: menú lateral y tarjetas en columnas.
+
+> 💡 ¿Ves un **ⓘ ?** junto a algo? Tócalo: explica el RPE, fuerza contra hipertrofia, cómo decide la app el peso, el 1RM estimado y las calorías.
 
 ## 🏁 Tu primer entreno
 
@@ -159,16 +161,19 @@ Con el RPE, las sugerencias son más inteligentes:
 - Si **todo se sintió fácil (RPE 7 o menos)**, te pide subir más rápido (+2 reps).
 
 ### Usa las herramientas de cada ejercicio
-- **🔥 Discos:** te muestra las **series de calentamiento** recomendadas y **qué discos poner de cada lado** de la barra. Configura tu barra y los discos de tu gym en **Ajustes**.
+- **🔥 Discos:** te muestra las **series de calentamiento** recomendadas y **qué discos poner de cada lado** de la barra. Configura tu barra y los discos de tu gym en **Ajustes → Barra y discos**.
 - **📝 Nota:** anota cualquier cosa ("molestia en el hombro", "agarre cerrado"). La verás la próxima vez junto a "Última vez".
 
 ### Ejercicios por tiempo o distancia
 Al crear un ejercicio elige **"Se mide en"**: **Repeticiones**, **Segundos** (plancha, colgarse de la barra) o **Metros** (paseo del granjero, empuje de trineo). La app te pedirá **+5 s** o **+5 m** por sesión hasta llegar a la meta máxima, y después sugerirá subir peso.
 
 ### Ajusta tus ejercicios
-En **Ajustes → Ejercicios** toca el nombre de un ejercicio para cambiar su nombre, músculo o unidad. También puedes ajustar directamente:
-- **Meta mín/máx** (por ejemplo, 6–10 reps o 20–40 m): cuando llegas al máximo en todas las series, la app sugiere subir peso.
-- **+kg**: cuánto subir cada vez. Usa 1–2 kg en ejercicios pequeños (laterales, curl) y 2.5–5 kg en los grandes (sentadilla, peso muerto).
+En **Ajustes → Ejercicios** (con buscador) toca un ejercicio para cambiar:
+- **Nombre, músculo y unidad** (reps, segundos o metros).
+- **Meta mín/máx** (por ejemplo, 6–10 reps o 20–40 m): es la meta por defecto; en cada rutina puedes darle otra (por ejemplo 5×5 de fuerza).
+- **Subir (kg)**: cuánto subir cada vez. Usa 1–2 kg en ejercicios pequeños (laterales, curl) y 2.5–5 kg en los grandes (sentadilla, peso muerto).
+
+Los ejercicios que creaste tú se pueden borrar si no están en ninguna rutina ni en tu historial.
 
 ### 🎉 Temas de temporada y fechas especiales
 El encabezado de **Inicio** cambia de color según la **hora** (🌅 mañana, ☀️ tarde, 🌙 noche) y muestra la **estación** del año. En fechas especiales cambia el color de la app y aparece un mensaje:
@@ -178,7 +183,7 @@ El encabezado de **Inicio** cambia de color según la **hora** (🌅 mañana, �
 
 **Color de la app:** en **Ajustes → Apariencia** elige entre 7 colores. En fechas especiales se usa el color de temporada (desactiva "Temas de temporada" si prefieres el tuyo siempre).
 
-Configúralo en **Ajustes → Temas de temporada**: país, cumpleaños y la fecha en que empezaste a entrenar. Si no pones esa fecha, se usa la de tu primer entreno. También puedes desactivar los temas ahí.
+Configura tu país, cumpleaños y la fecha en que empezaste a entrenar en **Ajustes → Perfil**; los temas se activan o desactivan en **Ajustes → Apariencia**. Si no pones esa fecha, se usa la de tu primer entreno.
 
 ### ¿Olvidaste anotar un entreno?
 En **Inicio** toca **"Anotar entreno pasado"** (o ve a **Progreso → Historial → "+ Registrar entreno pasado"**), elige el día y la rutina, y escribe lo que hiciste. Aquí no hace falta marcar ✓: se guarda toda serie con reps.
@@ -202,12 +207,12 @@ Tus datos **solo existen en tu teléfono**. No hay nube ni cuenta. Se pierden si
 - Cambias o pierdes tu teléfono.
 
 **Haz un respaldo cada 2–4 semanas:**
-1. **Ajustes (⚙️) → "Exportar respaldo"**. Se descarga un archivo `gym-progress-FECHA.json`.
+1. **Ajustes (⚙️) → Mis datos → "Exportar respaldo"**. Si nunca has respaldado o pasaron más de 30 días, Ajustes te lo recuerda. Se descarga un archivo `gym-progress-FECHA.json`.
    - **iPhone:** se guarda en la app **Archivos** (carpeta Descargas).
    - **Android:** se guarda en la carpeta **Descargas**.
 2. Guarda ese archivo en un lugar seguro: Google Drive, iCloud, correo, etc.
 
-**Para recuperar tus datos** (o pasarlos a otro dispositivo): **Ajustes → "Importar"** y elige el archivo.
+**Para recuperar tus datos** (o pasarlos a otro dispositivo): **Ajustes → Mis datos → "Importar"** y elige el archivo.
 
 > ⚠️ Importar **reemplaza** los datos actuales de ese dispositivo.
 
@@ -217,7 +222,7 @@ Tus datos **solo existen en tu teléfono**. No hay nube ni cuenta. Se pierden si
 
 | Tema | Qué saber |
 |---|---|
-| **Sonido del descanso** | Suena 3 pitidos al terminar. **No suena** si el interruptor de silencio está activado, si bloqueas la pantalla o si cambias a otra app. Pruébalo en **Ajustes → "Probar sonido"**. |
+| **Sonido del descanso** | Suena 3 pitidos al terminar. **No suena** si el interruptor de silencio está activado, si bloqueas la pantalla o si cambias a otra app. Pruébalo en **Ajustes → Entrenamiento → "Probar sonido"**. |
 | **Vibración** | iPhone no permite que las apps web vibren. Usa el sonido. |
 | **Safari vs app instalada** | Son **almacenamientos separados**. Si usaste la app en Safari antes de instalarla, la app instalada empieza vacía: exporta desde Safari e importa en la app. |
 | **Pantalla** | Durante el entreno, considera desactivar el bloqueo automático: **Configuración → Pantalla y brillo → Bloqueo automático**. |
@@ -238,7 +243,7 @@ Tus datos **solo existen en tu teléfono**. No hay nube ni cuenta. Se pierden si
 Solo la primera vez que abres la app. Después funciona sin conexión, ideal para gimnasios con mala señal.
 
 **¿Cómo actualizo la app?**
-Se actualiza sola. Cuando haya una versión nueva, ciérrala por completo y vuelve a abrirla (a veces hace falta hacerlo dos veces). La versión aparece al final de **Ajustes**.
+Se actualiza sola. Cuando haya una versión nueva, ciérrala por completo y vuelve a abrirla (a veces hace falta hacerlo dos veces). La versión aparece al final de **Ajustes** y en **Ajustes → Ayuda**.
 
 **¿Mis datos se envían a algún lado?**
 No. Todo se guarda en tu dispositivo. La app no tiene servidor ni recopila información.
@@ -254,7 +259,7 @@ Casi siempre se debe a un dato mal anotado en un entreno anterior. Corrígelo en
 
 **El temporizador no sonó.**
 - iPhone: revisa el interruptor de silencio y que la app estaba abierta en pantalla.
-- Revisa que el sonido esté activado en **Ajustes**.
+- Revisa que el sonido esté activado en **Ajustes → Entrenamiento**.
 
 ---
 

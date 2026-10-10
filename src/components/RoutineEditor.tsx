@@ -6,6 +6,7 @@ import { metricOf, unitHeader } from '../lib/metric'
 import { GOAL_DEFAULTS, ITEM_GOAL_LABEL, REST_OPTIONS, ROUTINE_GOALS, defaultTarget, fmtRest, fmtScheme, itemTarget, routineGoalInfo } from '../lib/goals'
 import { ExercisePicker } from './ExercisePicker'
 import { NumInput } from './NumInput'
+import { Help } from './Help'
 import { useDialog } from './Dialog'
 
 interface Props {
@@ -177,6 +178,7 @@ function TargetEditor({
   return (
     <div className="target-editor">
       {metricOf(ex) === 'reps' && (
+        <div className="segmented-row">
         <div className="segmented" role="radiogroup" aria-label="Tipo de trabajo">
           {(['strength', 'hypertrophy'] as ItemGoal[]).map((g) => (
             <button
@@ -189,6 +191,8 @@ function TargetEditor({
               {ITEM_GOAL_LABEL[g]}
             </button>
           ))}
+        </div>
+        <Help topic="goal" />
         </div>
       )}
       <p className="muted small">

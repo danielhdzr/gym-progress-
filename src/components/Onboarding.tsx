@@ -30,8 +30,10 @@ export function Onboarding() {
         settings: { ...s.settings, onboarded: true, goal, userName: name.trim().slice(0, 30), namePrompted: true, weeklyGoalDays: days },
         cardioGoalKm: goal === 'cardio' && !s.cardioGoalKm ? 10 : s.cardioGoalKm,
       }
-      if (template) next = applyTemplate(next, template, true)
-      else if (!keepExamples) next = { ...next, routines: [] }
+      // Solo un usuario nuevo (sin historial) pierde las rutinas de ejemplo; si repite la bienvenida, se agregan
+      const fresh = s.workouts.length === 0
+      if (template) next = applyTemplate(next, template, fresh)
+      else if (!keepExamples && fresh) next = { ...next, routines: [] }
       return next
     })
     nav.go(goal === 'cardio' && !template ? 'cardio' : template || keepExamples ? 'home' : 'gym')

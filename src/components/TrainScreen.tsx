@@ -12,7 +12,7 @@ import { fmtKcal, workoutKcal } from '../lib/calories'
 import { fmtScheme, itemTarget, routineGoalInfo } from '../lib/goals'
 import { metricOf } from '../lib/metric'
 import { TemplatesSheet } from './Templates'
-import { LayoutTemplate, Plus, Zap } from 'lucide-react'
+import { Dumbbell, LayoutTemplate, Plus, Zap } from 'lucide-react'
 
 export function TrainScreen() {
   const { state, update } = useStore()
@@ -114,6 +114,19 @@ export function TrainScreen() {
         </section>
       )}
 
+      {!state.routines.length && (
+        <section className="card empty-card">
+          <Dumbbell size={32} aria-hidden />
+          <h3>Arma tu primera rutina</h3>
+          <p className="muted small">Parte de una plantilla (fuerza, hipertrofia, powerbuilding o definición) o créala desde cero con tus ejercicios.</p>
+          <div className="row2">
+            <button className="primary" onClick={() => setTemplates(true)}>Ver plantillas</button>
+            <button className="secondary" onClick={() => setEditing({ id: uid(), name: 'Nueva rutina', items: [] })}>Crear desde cero</button>
+          </div>
+          <button className="link" onClick={() => begin(null)}>O haz un entreno libre</button>
+        </section>
+      )}
+
       <div className="cards-grid">
       {state.routines.map((r) => (
         <section key={r.id} className="card routine">
@@ -145,6 +158,7 @@ export function TrainScreen() {
       ))}
       </div>
 
+      {state.routines.length > 0 && (
       <div className="actions-row">
         <button className="secondary" onClick={() => setEditing({ id: uid(), name: 'Nueva rutina', items: [] })}>
           <Plus size={18} aria-hidden /> Nueva rutina
@@ -156,6 +170,7 @@ export function TrainScreen() {
           <Zap size={18} aria-hidden /> Entreno libre
         </button>
       </div>
+      )}
 
       {templates && <TemplatesSheet onClose={() => setTemplates(false)} />}
     </div>

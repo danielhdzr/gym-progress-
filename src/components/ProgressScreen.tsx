@@ -6,6 +6,9 @@ import { LineChart } from './LineChart'
 import { fmtAmount, fmtSet, metricOf } from '../lib/metric'
 import type { Metric } from '../types'
 import { BodyweightCard } from './BodyweightCard'
+import { Help } from './Help'
+import { useNav } from '../lib/nav'
+import { ChartLine } from 'lucide-react'
 
 /** Rango orientativo de series semanales por músculo para hipertrofia. */
 const TARGET_MIN = 10
@@ -28,6 +31,7 @@ function scoreInfo(metric: Metric, bodyweight: boolean) {
 export function ProgressScreen({ header, focusRecords = false }: { header?: React.ReactNode; focusRecords?: boolean }) {
   const { state } = useStore()
   const recordsRef = useRef<HTMLElement>(null)
+  const nav = useNav()
 
   useEffect(() => {
     if (focusRecords) recordsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -52,10 +56,12 @@ export function ProgressScreen({ header, focusRecords = false }: { header?: Reac
     return (
       <div className="screen">
         {header}
-        <div className="empty">
-          <p>Aún no hay datos.</p>
-          <p className="muted">Termina tu primer entreno y aquí verás tus gráficas, récords y alertas.</p>
-        </div>
+        <section className="card empty-card">
+          <ChartLine size={32} aria-hidden />
+          <h3>Aquí verás cómo progresas</h3>
+          <p className="muted small">Al terminar tu primer entreno aparecerán tus gráficas de fuerza, récords y alertas de estancamiento.</p>
+          <button className="primary" onClick={() => nav.go('gym')}>Empezar un entreno</button>
+        </section>
         <BodyweightCard />
       </div>
     )
@@ -112,7 +118,7 @@ export function ProgressScreen({ header, focusRecords = false }: { header?: Reac
         <div className="stats">
           <div>
             <span className="stat">{info.fmt(bestScore)}</span>
-            <span className="muted small">{info.label}</span>
+            <span className="muted small">{info.label}{metric === 'reps' && !bw && <> <Help topic="e1rm" /></>}</span>
           </div>
           {!bw && (
             <div>

@@ -7,6 +7,7 @@ import { addSet, patchSet, removeEntry, removeLastSet, setNote } from '../lib/wo
 import { fmtPlates, platesPerSide, warmupSets } from '../lib/tools'
 import { fmtShortDate } from '../lib/format'
 import { NumInput } from './NumInput'
+import { Help } from './Help'
 import { fmtSet, metricOf, unitHeader } from '../lib/metric'
 import { useDialog } from './Dialog'
 
@@ -63,7 +64,11 @@ export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle
         </button>
       </div>
 
-      {live && <p className={`tip tip-${tip.kind}`}>{tip.text}</p>}
+      {live && (
+        <p className={`tip tip-${tip.kind}`}>
+          {tip.text} <Help topic="progression" label="¿Cómo decide la app el peso?" />
+        </p>
+      )}
       {stalled && (
         <p className="tip tip-deload">
           Llevas 3 sesiones sin mejorar en este ejercicio. Prueba un deload, cambiar el rango o una variante.
@@ -78,7 +83,7 @@ export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle
 
       <div className={`sets ${live ? '' : 'no-check'}`}>
         <div className="set-row set-header">
-          <span>#</span><span>kg</span><span>{unitHeader(metric)}</span><span>RPE</span>{live && <span />}
+          <span>#</span><span>kg</span><span>{unitHeader(metric)}</span><span className="rpe-head">RPE <Help topic="rpe" /></span>{live && <span />}
         </div>
         {entry.sets.map((set, si) => (
           <div key={si} className={`set-row ${live && set.done ? 'is-done' : ''}`}>

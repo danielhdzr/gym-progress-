@@ -25,6 +25,7 @@ import { LineChart } from './LineChart'
 import { cardioKcal, fmtKcal } from '../lib/calories'
 import { NumInput } from './NumInput'
 import { useDialog } from './Dialog'
+import { Help } from './Help'
 
 type Draft = Omit<CardioSession, 'id'> & { id?: string; fromTimer?: boolean }
 
@@ -238,7 +239,7 @@ function WeekCard() {
           <span className="muted small">tiempo</span>
         </div>
       </div>
-      {weekKcal > 0 && <p className="small center">🔥 {fmtKcal(weekKcal)} quemadas en cardio esta semana</p>}
+      {weekKcal > 0 && <p className="small center">🔥 {fmtKcal(weekKcal)} quemadas en cardio esta semana <Help topic="kcal" /></p>}
 
       {goal > 0 && (
         <>

@@ -4,6 +4,8 @@ import { useStore } from '../lib/store'
 import { fmtDate, fmtDuration, toYmd, withLocalDate } from '../lib/format'
 import { startWorkout } from '../lib/workout'
 import { useDialog } from './Dialog'
+import { useNav } from '../lib/nav'
+import { CalendarDays } from 'lucide-react'
 import { fmtSet, metricOf } from '../lib/metric'
 import { fmtKcal, workoutKcal } from '../lib/calories'
 import { WorkoutLogEditor } from './WorkoutLogEditor'
@@ -11,6 +13,7 @@ import { WorkoutLogEditor } from './WorkoutLogEditor'
 export function HistoryScreen({ header, autoOpenPast = false }: { header?: React.ReactNode; autoOpenPast?: boolean }) {
   const { state, update } = useStore()
   const dialog = useDialog()
+  const nav = useNav()
   const [editing, setEditing] = useState<{ workout: Workout; isNew: boolean } | null>(null)
   const [creating, setCreating] = useState(autoOpenPast)
   const [saved, setSaved] = useState<{ name: string; prs: string[] } | null>(null)
@@ -48,10 +51,12 @@ export function HistoryScreen({ header, autoOpenPast = false }: { header?: React
       )}
 
       {!workouts.length && (
-        <div className="empty">
-          <p>Sin entrenos todavía.</p>
-          <p className="muted">Ve a Entrenar y empieza tu primera rutina, o registra uno que hiciste antes.</p>
-        </div>
+        <section className="card empty-card">
+          <CalendarDays size={32} aria-hidden />
+          <h3>Tu historial empieza con tu primer entreno</h3>
+          <p className="muted small">Cada entreno que termines aparecerá aquí. ¿Ya entrenaste antes de usar la app? Regístralo arriba.</p>
+          <button className="primary" onClick={() => nav.go('gym')}>Ir a Pesas</button>
+        </section>
       )}
       {workouts.map((w) => (
         <details key={w.id} className="card">

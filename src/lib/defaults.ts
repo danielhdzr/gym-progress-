@@ -92,6 +92,7 @@ export const DEFAULT_SETTINGS: Settings = {
   onboarded: false,
   goal: null,
   accent: 'lime',
+  lastBackupAt: '',
   country: 'MX',
   seasonalThemes: true,
   weeklyGoalDays: 3,

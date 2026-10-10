@@ -80,6 +80,8 @@ export interface Settings {
   onboarded: boolean
   goal: UserGoal | null
   accent: AccentColor
+  /** Fecha (ISO) del último respaldo exportado, o "" */
+  lastBackupAt: string
   /** País para festivos nacionales y hemisferio de las estaciones */
   country: CountryCode
   /** Colores y mensajes según hora, estación y fechas especiales */
