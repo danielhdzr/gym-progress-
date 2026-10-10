@@ -1,4 +1,4 @@
-import type { Exercise, Metric, SetLog, Workout } from '../types'
+import type { Exercise, ItemGoal, Metric, SetLog, Target, Workout } from '../types'
 import { fmtAmount, fmtRange, metricOf, stepFor } from './metric'
 
 /** 1RM estimado con la fórmula de Epley. Para ejercicios sin peso usamos las reps. */
@@ -15,13 +15,17 @@ export interface Session {
   note?: string
 }
 
-/** Sesiones terminadas de un ejercicio, de la más antigua a la más reciente (solo series completadas). */
-export function sessionsFor(exerciseId: string, workouts: Workout[]): Session[] {
+/**
+ * Sesiones terminadas de un ejercicio, de la más antigua a la más reciente (solo series completadas).
+ * Con `goal`, solo las hechas con ese objetivo (las anteriores a los objetivos cuentan como hipertrofia).
+ */
+export function sessionsFor(exerciseId: string, workouts: Workout[], goal?: ItemGoal): Session[] {
   const sessions: Session[] = []
   for (const w of workouts) {
     if (!w.finishedAt) continue
     for (const entry of w.entries) {
       if (entry.exerciseId !== exerciseId) continue
+      if (goal && (entry.target?.goal ?? 'hypertrophy') !== goal) continue
       const sets = entry.sets.filter((s) => s.done && s.reps > 0)
       if (sets.length) sessions.push({ workoutId: w.id, date: w.startedAt, sets, note: entry.note })
     }
@@ -163,6 +167,28 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
     weight: top.weight,
     reps: target,
     text: `Mantén ${top.weight} kg y busca ${A(target)} por serie (meta: ${A(ex.repMax)}).`,
+  }
+}
+
+/**
+ * Sugerencia para un ejercicio con su objetivo (fuerza/hipertrofia) dentro de una rutina.
+ * Si nunca lo hiciste con ese objetivo pero sí con otro, estima el peso desde tu mejor 1RM
+ * (al 90 % del peso teórico para esas reps, para empezar con margen).
+ */
+export function suggestFor(ex: Exercise, target: Target | undefined, workouts: Workout[], plannedSets: number): Suggestion {
+  const eff = target ? { ...ex, repMin: target.repMin, repMax: target.repMax } : ex
+  const tip = suggest(eff, sessionsFor(ex.id, workouts, target?.goal), plannedSets)
+  if (tip.kind !== 'new' || !target || metricOf(ex) !== 'reps') return tip
+  const all = sessionsFor(ex.id, workouts)
+  const best = all.length ? Math.max(...all.map((s) => bestSet(s.sets).score)) : 0
+  const weighted = all.some((s) => s.sets.some((x) => x.weight > 0))
+  if (!best || !weighted) return tip
+  const weight = Math.max(ex.increment, roundTo((best / (1 + target.repMin / 30)) * 0.9, ex.increment || 2.5))
+  return {
+    kind: 'new',
+    weight,
+    reps: target.repMin,
+    text: `Estimado con tu 1RM (~${Math.round(best)} kg): empieza con ${weight} kg × ${fmtAmount(target.repMin, 'reps')}.`,
   }
 }
 

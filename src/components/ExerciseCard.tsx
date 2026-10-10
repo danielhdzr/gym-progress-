@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import type { ExerciseLog, Workout } from '../types'
 import { useStore } from '../lib/store'
-import { isStalled, sessionsFor, suggest } from '../lib/progression'
+import { isStalled, sessionsFor, suggestFor } from '../lib/progression'
+import { ITEM_GOAL_LABEL, fmtRest, fmtScheme } from '../lib/goals'
 import { addSet, patchSet, removeEntry, removeLastSet, setNote } from '../lib/workout'
 import { fmtPlates, platesPerSide, warmupSets } from '../lib/tools'
 import { fmtShortDate } from '../lib/format'
@@ -33,7 +34,7 @@ export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle
 
   const live = mode === 'live'
   const metric = metricOf(ex)
-  const tip = suggest(ex, sessions, entry.sets.length)
+  const tip = suggestFor(ex, entry.target, history, entry.sets.length)
   const last = sessions.at(-1)
   const stalled = live && isStalled(sessions, metric)
   const working = Math.max(0, ...entry.sets.map((s) => s.weight))
@@ -42,7 +43,14 @@ export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle
   return (
     <section className="card">
       <div className="card-head">
-        <h3>{ex.name}</h3>
+        <div>
+          <h3>{ex.name}</h3>
+          {entry.target && (
+            <span className={`goal-tag ${entry.target.goal}`}>
+              {ITEM_GOAL_LABEL[entry.target.goal]} · {fmtScheme(entry.sets.length, entry.target, metric)} · descanso {fmtRest(entry.target.restSeconds)}
+            </span>
+          )}
+        </div>
         <button
           className="icon"
           aria-label="Quitar ejercicio"

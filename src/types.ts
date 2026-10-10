@@ -14,15 +14,32 @@ export interface Exercise {
   metric?: Metric
 }
 
+/** Objetivo de un ejercicio dentro de una rutina. */
+export type ItemGoal = 'strength' | 'hypertrophy'
+
+/** Objetivo general de una rutina; "cut" = definición (hipertrofia con descansos cortos + cardio). */
+export type RoutineGoal = 'strength' | 'hypertrophy' | 'cut' | 'powerbuilding'
+
+/** Lo que se busca en un ejercicio concreto de una rutina. */
+export interface Target {
+  goal: ItemGoal
+  repMin: number
+  repMax: number
+  restSeconds: number
+}
+
 export interface RoutineItem {
   exerciseId: string
   sets: number
+  /** Si no está, se usa el rango del ejercicio y el descanso general (rutinas anteriores) */
+  target?: Target
 }
 
 export interface Routine {
   id: string
   name: string
   items: RoutineItem[]
+  goal?: RoutineGoal
 }
 
 export interface SetLog {
@@ -38,6 +55,8 @@ export interface ExerciseLog {
   exerciseId: string
   sets: SetLog[]
   note?: string
+  /** Objetivo con el que se hizo; las sugerencias comparan fuerza con fuerza e hipertrofia con hipertrofia */
+  target?: Target
 }
 
 export interface Workout {
@@ -51,7 +70,16 @@ export interface Workout {
 
 export type CountryCode = 'MX' | 'US' | 'CO' | 'AR' | 'CL' | 'PE' | 'ES'
 
+/** Objetivo elegido en la bienvenida */
+export type UserGoal = 'strength' | 'muscle' | 'cut' | 'cardio' | 'mixed'
+
+export type AccentColor = 'lime' | 'blue' | 'purple' | 'pink' | 'orange' | 'red' | 'teal'
+
 export interface Settings {
+  /** Ya vio la bienvenida */
+  onboarded: boolean
+  goal: UserGoal | null
+  accent: AccentColor
   /** País para festivos nacionales y hemisferio de las estaciones */
   country: CountryCode
   /** Colores y mensajes según hora, estación y fechas especiales */

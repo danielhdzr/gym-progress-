@@ -1,5 +1,5 @@
 import type { CardioSession, Exercise, Routine, Workout } from '../types'
-import { sessionsFor, suggest } from './progression'
+import { suggestFor } from './progression'
 import { fmtAmount, metricOf } from './metric'
 
 /** La rutina que sigue: la siguiente a la última que hiciste, en el orden de tu lista (vuelve al inicio). */
@@ -15,10 +15,10 @@ export function nextRoutine(routines: Routine[], workouts: Workout[]): Routine |
   return usable[(i + 1) % usable.length]
 }
 
-/** Minutos estimados: cada serie ~40 s de trabajo + el descanso; redondeado a 5 min. */
+/** Minutos estimados: cada serie ~40 s de trabajo + su descanso (el del ejercicio o el general); redondeado a 5 min. */
 export function estimateMinutes(routine: Routine, restSeconds: number) {
-  const sets = routine.items.reduce((n, i) => n + i.sets, 0)
-  return Math.max(5, Math.round((sets * (40 + restSeconds)) / 60 / 5) * 5)
+  const seconds = routine.items.reduce((n, i) => n + i.sets * (40 + (i.target?.restSeconds ?? restSeconds)), 0)
+  return Math.max(5, Math.round(seconds / 60 / 5) * 5)
 }
 
 /** Adelanto de la sugerencia del primer ejercicio: "Press banca: sube a 62.5 kg". */
@@ -26,7 +26,7 @@ export function routinePreview(routine: Routine, exercises: Exercise[], workouts
   const item = routine.items[0]
   const ex = exercises.find((e) => e.id === item?.exerciseId)
   if (!ex) return null
-  const tip = suggest(ex, sessionsFor(ex.id, workouts), item.sets)
+  const tip = suggestFor(ex, item.target, workouts, item.sets)
   const amount = fmtAmount(tip.reps, metricOf(ex))
   switch (tip.kind) {
     case 'new':

@@ -9,6 +9,7 @@ import { CardioScreen } from './components/CardioScreen'
 import { AmbienceStyle } from './components/Ambience'
 import { DialogProvider } from './components/Dialog'
 import { RestTimerProvider } from './components/RestTimer'
+import { Onboarding } from './components/Onboarding'
 
 const TABS: { id: Tab; label: string; Icon: LucideIcon }[] = [
   { id: 'home', label: 'Inicio', Icon: House },
@@ -69,6 +70,8 @@ function Shell() {
           </>
         )}
       </main>
+
+      {!state.settings.onboarded && <Onboarding />}
 
       {/* Teléfono y tableta: menú inferior */}
       <nav className="tabbar" aria-label="Secciones">

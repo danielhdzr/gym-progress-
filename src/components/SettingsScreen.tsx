@@ -9,6 +9,7 @@ import { playRestDone, unlockAudio } from '../lib/sound'
 import { ExerciseForm } from './ExercisePicker'
 import { metricOf, unitHeader } from '../lib/metric'
 import { COUNTRIES } from '../lib/occasions'
+import { ACCENTS, accentInfo } from '../lib/accents'
 import { toYmd } from '../lib/format'
 
 export function SettingsScreen({ onBack }: { onBack?: () => void }) {
@@ -71,6 +72,31 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
             }
           />
         </label>
+      </section>
+
+      <section className="card">
+        <h3>Apariencia</h3>
+        <div className="field">
+          Color de la app
+          <div className="swatches" role="radiogroup" aria-label="Color de la app">
+            {ACCENTS.map((c) => (
+              <button
+                key={c.id}
+                role="radio"
+                aria-checked={state.settings.accent === c.id}
+                aria-label={c.name}
+                title={c.name}
+                className={`swatch ${state.settings.accent === c.id ? 'on' : ''}`}
+                style={{ '--sw-dark': c.dark[0], '--sw-light': c.light[0] } as React.CSSProperties}
+                onClick={() => setSetting({ accent: c.id })}
+              />
+            ))}
+          </div>
+        </div>
+        <p className="muted small">
+          {accentInfo(state.settings.accent).name}
+          {state.settings.seasonalThemes && ' · En fechas especiales se usa el color de temporada.'}
+        </p>
       </section>
 
       <section className="card">
@@ -240,7 +266,7 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
         </button>
       </section>
 
-      <p className="muted small center">Gym Progress · v0.9</p>
+      <p className="muted small center">Gym Progress · v1.0</p>
 
       {editingEx && (
         <div className="sheet-backdrop" onClick={() => setEditingEx(null)}>

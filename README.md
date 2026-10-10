@@ -20,6 +20,9 @@ Instrucciones detalladas, consejos para sacarle provecho, respaldo de datos y pr
 ## Funciones
 
 - **Inicio claro**: "Hoy te toca" sugiere la siguiente rutina con un adelanto de la primera sugerencia, accesos rápidos y "Tu semana" con meta de días activos.
+- **Fuerza, hipertrofia, powerbuilding y definición**: cada ejercicio de una rutina tiene su objetivo (fuerza 5×5 con progresión lineal y 3 min de descanso, o hipertrofia 8–12 con doble progresión). Las sugerencias comparan fuerza con fuerza; la primera vez estiman el peso desde tu 1RM.
+- **Plantillas**: Fuerza 5×5, Fuerza Torso/Pierna, Powerbuilding, Push/Pull/Legs, Torso/Pierna, Cuerpo completo y dos de Definición. Se pueden editar o crear rutinas propias desde cero.
+- **Bienvenida** de 3 pasos (objetivo, nombre y días, rutina inicial) y **color de la app** a elegir (7 colores con contraste verificado).
 - **Responsiva**: menú inferior en teléfono, tarjetas en columnas en tableta y menú lateral en computadora.
 
 - **Sugerencias de progresión** (doble progresión): mismo peso y +1 rep hasta llegar al tope del rango en todas las series; después sube el peso. Si fallas el mínimo dos sesiones seguidas, sugiere un deload de −10%.

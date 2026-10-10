@@ -1,5 +1,5 @@
-import type { Exercise, ExerciseLog, Routine, SetLog, Workout } from '../types'
-import { prsIn, sessionsFor, suggest } from './progression'
+import type { Exercise, ExerciseLog, Routine, SetLog, Target, Workout } from '../types'
+import { prsIn, suggestFor } from './progression'
 import { uid } from './store'
 
 /** Entrenos terminados anteriores a `w` (sin incluirlo): base para sugerencias y récords de entrenos pasados. */
@@ -12,11 +12,12 @@ export function historyBefore(workouts: Workout[], w: Pick<Workout, 'id' | 'star
  * `weightOnly` deja las reps vacías: al registrar un entreno pasado solo se guardan
  * las series que el usuario llenó, así que no se deben inventar reps.
  */
-export function newEntry(ex: Exercise, history: Workout[], sets: number, weightOnly = false): ExerciseLog {
-  const tip = suggest(ex, sessionsFor(ex.id, history), sets)
+export function newEntry(ex: Exercise, history: Workout[], sets: number, weightOnly = false, target?: Target): ExerciseLog {
+  const tip = suggestFor(ex, target, history, sets)
   return {
     exerciseId: ex.id,
     sets: Array.from({ length: sets }, () => ({ weight: tip.weight, reps: weightOnly ? 0 : tip.reps, done: false })),
+    ...(target ? { target } : {}),
   }
 }
 
@@ -36,7 +37,7 @@ export function startWorkout(
     startedAt,
     entries: (routine?.items ?? []).flatMap((item) => {
       const ex = byId.get(item.exerciseId)
-      return ex ? [newEntry(ex, before, item.sets, weightOnly)] : []
+      return ex ? [newEntry(ex, before, item.sets, weightOnly, item.target)] : []
     }),
   }
 }

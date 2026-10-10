@@ -47,6 +47,7 @@ export const DEFAULT_EXERCISES: Exercise[] = [
   ex('hip-thrust', 'Hip thrust', 'Glúteos', 8, 12, 5),
   ex('calf', 'Elevación de talones', 'Pantorrillas', 10, 15, 5),
   ex('cable-crunch', 'Crunch en polea', 'Core', 10, 15, 2.5),
+  ex('leg-ext', 'Extensión de cuádriceps', 'Cuádriceps', 10, 15, 2.5),
 ]
 
 export const DEFAULT_ROUTINES: Routine[] = [
@@ -88,6 +89,9 @@ export const DEFAULT_ROUTINES: Routine[] = [
 export const ALL_PLATES = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5]
 
 export const DEFAULT_SETTINGS: Settings = {
+  onboarded: false,
+  goal: null,
+  accent: 'lime',
   country: 'MX',
   seasonalThemes: true,
   weeklyGoalDays: 3,

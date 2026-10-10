@@ -21,7 +21,15 @@ export function parseState(raw: string): AppState {
   }
   const base = defaultState()
   // Respaldos de versiones anteriores pueden no traer los campos nuevos
-  return { ...base, ...data, settings: { ...base.settings, ...data.settings } } as AppState
+  const settings = { ...base.settings, ...data.settings }
+  // Quien ya usaba la app antes de existir la bienvenida no debe verla
+  if (data.settings && data.settings.onboarded === undefined) {
+    settings.onboarded = data.workouts.length > 0 || (data.cardio?.length ?? 0) > 0 || !!data.settings.namePrompted
+  }
+  // Ejercicios nuevos de la lista base que no existían en datos anteriores
+  const known = new Set(data.exercises.map((e) => e.id))
+  const exercises = [...data.exercises, ...base.exercises.filter((e) => !known.has(e.id))]
+  return { ...base, ...data, exercises, settings } as AppState
 }
 
 let counter = 0

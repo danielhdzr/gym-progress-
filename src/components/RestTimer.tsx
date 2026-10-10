@@ -4,8 +4,8 @@ import { fmtClock } from '../lib/format'
 import { playRestDone, unlockAudio } from '../lib/sound'
 
 interface RestTimer {
-  /** Inicia el descanso. Se llama desde un toque del usuario (desbloquea el audio en iOS). */
-  start: () => void
+  /** Inicia el descanso (por defecto el de Ajustes). Se llama desde un toque del usuario (desbloquea el audio en iOS). */
+  start: (seconds?: number) => void
   stop: () => void
 }
 
@@ -36,12 +36,15 @@ export function RestTimerProvider({ children }: { children: ReactNode }) {
     }
   }, [restEnd, left, restSound])
 
-  const start = useCallback(() => {
-    unlockAudio()
-    const t = Date.now()
-    setNow(t)
-    setRestEnd(t + restSeconds * 1000)
-  }, [restSeconds])
+  const start = useCallback(
+    (seconds?: number) => {
+      unlockAudio()
+      const t = Date.now()
+      setNow(t)
+      setRestEnd(t + (seconds ?? restSeconds) * 1000)
+    },
+    [restSeconds],
+  )
 
   const stop = useCallback(() => setRestEnd(null), [])
 

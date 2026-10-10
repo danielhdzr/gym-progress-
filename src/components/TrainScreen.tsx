@@ -9,12 +9,17 @@ import { useDialog } from './Dialog'
 import { useRestTimer } from './RestTimer'
 import { finishMessage } from '../lib/motivation'
 import { fmtKcal, workoutKcal } from '../lib/calories'
+import { fmtScheme, itemTarget, routineGoalInfo } from '../lib/goals'
+import { metricOf } from '../lib/metric'
+import { TemplatesSheet } from './Templates'
+import { LayoutTemplate, Plus, Zap } from 'lucide-react'
 
 export function TrainScreen() {
   const { state, update } = useStore()
   const dialog = useDialog()
   const rest = useRestTimer()
   const [editing, setEditing] = useState<Routine | null>(null)
+  const [templates, setTemplates] = useState(false)
   const [summary, setSummary] = useState<{ workout: Workout; prs: string[] } | null>(null)
 
   const nameOf = (id: string) => state.exercises.find((e) => e.id === id)?.name ?? '—'
@@ -85,7 +90,7 @@ export function TrainScreen() {
     <div className="screen">
       <header className="page-head">
         <h1>Pesas</h1>
-        <p className="muted">Elige una rutina para empezar, o arma la tuya.</p>
+        <p className="muted">Elige una rutina, arma la tuya o parte de una plantilla.</p>
       </header>
 
 
@@ -121,18 +126,38 @@ export function TrainScreen() {
             </div>
             <button className="ghost" onClick={() => setEditing(r)}>Editar</button>
           </div>
-          <p className="muted small">{r.items.map((i) => `${nameOf(i.exerciseId)} ${i.sets}×`).join(' · ')}</p>
+          {r.goal && <span className={`goal-badge ${r.goal}`}>{routineGoalInfo(r.goal)?.emoji} {routineGoalInfo(r.goal)?.label}</span>}
+          <ul className="routine-items">
+            {r.items.map((i, k) => {
+              const ex = state.exercises.find((e) => e.id === i.exerciseId)
+              if (!ex) return null
+              const t = itemTarget(i, ex, state.settings.restSeconds)
+              return (
+                <li key={k}>
+                  <span>{ex.name}</span>
+                  <span className={t.goal === 'strength' ? 'scheme strong' : 'scheme'}>{fmtScheme(i.sets, t, metricOf(ex))}</span>
+                </li>
+              )
+            })}
+          </ul>
           <button className="primary full" onClick={() => begin(r)} disabled={!r.items.length}>Empezar</button>
         </section>
       ))}
       </div>
 
-      <div className="row2">
+      <div className="actions-row">
         <button className="secondary" onClick={() => setEditing({ id: uid(), name: 'Nueva rutina', items: [] })}>
-          + Nueva rutina
+          <Plus size={18} aria-hidden /> Nueva rutina
         </button>
-        <button className="secondary" onClick={() => begin(null)}>Entreno libre</button>
+        <button className="secondary" onClick={() => setTemplates(true)}>
+          <LayoutTemplate size={18} aria-hidden /> Plantillas
+        </button>
+        <button className="secondary" onClick={() => begin(null)}>
+          <Zap size={18} aria-hidden /> Entreno libre
+        </button>
       </div>
+
+      {templates && <TemplatesSheet onClose={() => setTemplates(false)} />}
     </div>
   )
 }

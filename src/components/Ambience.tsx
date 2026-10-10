@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ChevronDown, Settings } from 'lucide-react'
 import { useStore } from '../lib/store'
+import { accentInfo } from '../lib/accents'
 import {
   TIME_THEME,
   countryInfo,
@@ -61,11 +62,16 @@ export function useAmbience(): Ambience {
   }, [tick, settings, workouts, exercises, cardio])
 }
 
-/** Cambia el color de acento de toda la app durante una fecha especial (con su variante clara y oscura). */
+/**
+ * Color de acento de toda la app: el de la fecha especial si hay una (y los temas están activos);
+ * si no, el que eligió el usuario en Ajustes. Lima es el de la hoja de estilos base.
+ */
 export function AmbienceStyle() {
   const { occasion } = useAmbience()
-  if (!occasion) return null
-  const { dark, light } = occasion.palette
+  const { state } = useStore()
+  const chosen = state.settings.accent
+  if (!occasion && chosen === 'lime') return null
+  const { dark, light } = occasion ? occasion.palette : accentInfo(chosen)
   const css = `
 :root { --accent: ${dark[0]}; --accent-ink: ${dark[1]}; }
 @media (prefers-color-scheme: light) { :root { --accent: ${light[0]}; --accent-ink: ${light[1]}; } }`

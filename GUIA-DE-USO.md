@@ -126,6 +126,24 @@ Para verlas, **registra tu peso corporal** en **Progreso → Peso corporal**. Se
 
 ## 🚀 Cómo sacarle el máximo provecho
 
+### 🎯 Fuerza, hipertrofia, powerbuilding y definición
+Cada rutina tiene un **objetivo**, y cada ejercicio dentro de ella puede ser de **fuerza** o de **hipertrofia**:
+
+| | Fuerza | Hipertrofia |
+|---|---|---|
+| Reps | 3–5 (por ejemplo 5×5) | 8–12 (más en ejercicios pequeños) |
+| Descanso | 3–5 min | 1.5–2 min (75 s en definición) |
+| Progresión | Completas todas las series → +peso | +reps hasta el máximo → +peso |
+
+- **Powerbuilding** combina las dos: un básico pesado (5×5) al inicio y accesorios a 8–12.
+- **Definición** usa hipertrofia con descansos cortos y una meta de cardio. Ojo: perder grasa depende sobre todo de la alimentación; la app te ayuda con el entrenamiento y el cardio.
+- El **temporizador de descanso** usa el descanso de cada ejercicio.
+- Las sugerencias **comparan fuerza con fuerza e hipertrofia con hipertrofia**. La primera vez que haces un ejercicio con otro objetivo, la app **estima el peso desde tu 1RM**.
+
+**Plantillas:** en **Pesas → Plantillas** hay rutinas listas (Fuerza 5×5, Fuerza Torso/Pierna, Powerbuilding, Push/Pull/Legs, Torso/Pierna, Cuerpo completo y Definición). Se agregan a tus rutinas o las reemplazan, como elijas.
+
+**Tus propias rutinas:** con **"+ Nueva rutina"** o **"Editar"** eliges el objetivo general, y al tocar cada ejercicio ajustas fuerza o hipertrofia, series, rango de reps y descanso.
+
 ### Registra el RPE (opcional, pero recomendado)
 La columna **RPE** es qué tan pesada se sintió la serie, del 1 al 10:
 
@@ -157,6 +175,8 @@ El encabezado de **Inicio** cambia de color según la **hora** (🌅 mañana, �
 - **Festivos:** Año Nuevo, San Valentín, Pascua, Halloween, Navidad y fin de año, más los de tu país (en México: 15–16 de septiembre, Día de Muertos y 20 de noviembre).
 - **Inicio de cada estación** (equinoccios y solsticios), según tu hemisferio.
 - **Tu cumpleaños**, **cada mes que cumples entrenando** (con tu mejor avance) y **tu aniversario** (con tus entrenos, récords y km).
+
+**Color de la app:** en **Ajustes → Apariencia** elige entre 7 colores. En fechas especiales se usa el color de temporada (desactiva "Temas de temporada" si prefieres el tuyo siempre).
 
 Configúralo en **Ajustes → Temas de temporada**: país, cumpleaños y la fecha en que empezaste a entrenar. Si no pones esa fecha, se usa la de tu primer entreno. También puedes desactivar los temas ahí.
 

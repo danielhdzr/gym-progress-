@@ -33,7 +33,7 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
   const toggleDone = (ei: number, si: number) => {
     const set = workout.entries[ei].sets[si]
     setEntries((es) => patchSet(es, ei, si, { done: !set.done }))
-    if (!set.done) rest.start()
+    if (!set.done) rest.start(workout.entries[ei].target?.restSeconds)
   }
 
   const doneSets = workout.entries.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0)
