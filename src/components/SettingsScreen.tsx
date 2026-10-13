@@ -31,7 +31,7 @@ type Section = 'profile' | 'training' | 'equipment' | 'exercises' | 'appearance'
 
 const GUIDE_URL = 'https://github.com/danielhdzr/gym-progress-/blob/main/GUIA-DE-USO.md'
 const REPO_URL = 'https://github.com/danielhdzr/gym-progress-'
-const VERSION = 'v1.1'
+const VERSION = 'v1.2'
 
 const GOAL_LABELS: Record<UserGoal, string> = {
   strength: 'Ganar fuerza',
@@ -62,7 +62,7 @@ export function SettingsScreen({ onBack }: { onBack?: () => void }) {
 
   const rows: { id: Section; Icon: LucideIcon; title: string; summary: string; warn?: boolean }[] = [
     { id: 'profile', Icon: User, title: 'Perfil', summary: [s.userName || 'Sin nombre', s.goal ? GOAL_LABELS[s.goal] : null, s.weeklyGoalDays ? `Meta ${s.weeklyGoalDays} días` : null].filter(Boolean).join(' · ') },
-    { id: 'training', Icon: Timer, title: 'Entrenamiento', summary: `Descanso ${fmtRest(s.restSeconds)} · Sonido ${s.restSound ? 'activado' : 'desactivado'}` },
+    { id: 'training', Icon: Timer, title: 'Entrenamiento', summary: `Descanso ${fmtRest(s.restSeconds)} · Sonido ${s.restSound ? 'activado' : 'desactivado'}${s.readinessCheck ? ' · Check-in' : ''}` },
     { id: 'equipment', Icon: Weight, title: 'Barra y discos', summary: `Barra ${s.barWeight} kg · ${s.plates.length} discos` },
     { id: 'exercises', Icon: ListChecks, title: 'Ejercicios', summary: `${state.exercises.length} ejercicios` },
     { id: 'appearance', Icon: Palette, title: 'Apariencia', summary: `${accentInfo(s.accent).name} · Temas de temporada ${s.seasonalThemes ? 'activados' : 'desactivados'}` },
@@ -230,6 +230,12 @@ function TrainingSection() {
               {fmtRest(sec)}
             </button>
           ))}
+        </div>
+      </Card>
+      <Card hint="Al empezar una rutina eliges cómo llegas (con energía, normal, cansado o día ligero) y la app ajusta peso y series.">
+        <div className="card-head">
+          <h3>Preguntar “¿Cómo llegas hoy?”</h3>
+          <Switch on={s.readinessCheck} label="Preguntar cómo llegas hoy" onChange={(readinessCheck) => set({ readinessCheck })} />
         </div>
       </Card>
       <Card hint="En iPhone no suena si el interruptor de silencio está activado o la pantalla está bloqueada.">

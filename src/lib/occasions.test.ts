@@ -104,6 +104,15 @@ describe('occasionFor', () => {
     expect(occasionFor(base(D(2026, 11, 26), { country: 'US' }))?.id).toBe('us-thanksgiving')
   })
 
+  it('festivos de Venezuela (hemisferio norte)', () => {
+    const ve = { country: 'VE' as const }
+    expect(occasionFor(base(D(2026, 4, 19), ve))?.id).toBe('ve-declaration')
+    expect(occasionFor(base(D(2026, 6, 24), ve))?.id).toBe('ve-carabobo')
+    expect(occasionFor(base(D(2026, 7, 5), ve))?.id).toBe('ve-independence')
+    expect(occasionFor(base(D(2026, 7, 5)))).toBeNull()
+    expect(occasionFor(base(D(2026, 3, 20), ve))?.message).toContain('primavera')
+  })
+
   it('festivos internacionales en cualquier país', () => {
     const o = occasionFor(base(D(2026, 10, 31), { country: 'AR' }))
     expect(o?.id).toBe('halloween')
@@ -169,7 +178,7 @@ describe('versión corta para el encabezado', () => {
     const days: Date[] = []
     for (let d = new Date(2026, 0, 1); d.getFullYear() === 2026; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)) days.push(d)
     const extra = { birthday: '1995-06-10', trainingStart: '2025-03-15', workouts: [w('2025-03-15', 50, 8), w('2025-06-01', 60, 8)], exercises: [bench] }
-    const countries = ['MX', 'US', 'CO', 'AR', 'CL', 'PE', 'ES'] as const
+    const countries = ['MX', 'US', 'CO', 'AR', 'CL', 'PE', 'ES', 'VE'] as const
     let checked = 0
     for (const country of countries)
       for (const now of days) {

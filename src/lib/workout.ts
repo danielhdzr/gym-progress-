@@ -1,5 +1,7 @@
-import type { Exercise, ExerciseLog, Routine, SetLog, Target, Workout } from '../types'
+import type { Exercise, ExerciseLog, Readiness, Routine, SetLog, Target, Workout } from '../types'
 import { prsIn, suggestFor } from './progression'
+import { defaultTarget } from './goals'
+import { metricOf } from './metric'
 import { uid } from './store'
 
 /** Entrenos terminados anteriores a `w` (sin incluirlo): base para sugerencias y récords de entrenos pasados. */
@@ -12,8 +14,8 @@ export function historyBefore(workouts: Workout[], w: Pick<Workout, 'id' | 'star
  * `weightOnly` deja las reps vacías: al registrar un entreno pasado solo se guardan
  * las series que el usuario llenó, así que no se deben inventar reps.
  */
-export function newEntry(ex: Exercise, history: Workout[], sets: number, weightOnly = false, target?: Target): ExerciseLog {
-  const tip = suggestFor(ex, target, history, sets)
+export function newEntry(ex: Exercise, history: Workout[], sets: number, weightOnly = false, target?: Target, readiness?: Readiness): ExerciseLog {
+  const tip = suggestFor(ex, target, history, sets, readiness)
   return {
     exerciseId: ex.id,
     sets: Array.from({ length: sets }, () => ({ weight: tip.weight, reps: weightOnly ? 0 : tip.reps, done: false })),
@@ -27,7 +29,10 @@ export function startWorkout(
   history: Workout[],
   startedAt = new Date().toISOString(),
   weightOnly = false,
+  readiness?: Readiness,
 ): Workout {
+  // Cansado o día ligero: una serie menos por ejercicio
+  const fewer = readiness === 'tired' || readiness === 'light'
   const byId = new Map(exercises.map((e) => [e.id, e]))
   const before = historyBefore(history, { id: '', startedAt })
   return {
@@ -35,9 +40,11 @@ export function startWorkout(
     name: routine?.name ?? 'Entreno libre',
     routineId: routine?.id,
     startedAt,
+    ...(readiness ? { readiness } : {}),
     entries: (routine?.items ?? []).flatMap((item) => {
       const ex = byId.get(item.exerciseId)
-      return ex ? [newEntry(ex, before, item.sets, weightOnly, item.target)] : []
+      const sets = fewer ? Math.max(1, item.sets - 1) : item.sets
+      return ex ? [newEntry(ex, before, sets, weightOnly, item.target, readiness)] : []
     }),
   }
 }
@@ -92,3 +99,30 @@ export const removeEntry = (entries: ExerciseLog[], ei: number) => entries.filte
 
 export const setNote = (entries: ExerciseLog[], ei: number, note: string) =>
   entries.map((e, i) => (i === ei ? { ...e, note } : e))
+
+/**
+ * Objetivo al sustituir un ejercicio: en fuerza (con reps) se conserva el esquema (ej. 5×5);
+ * en hipertrofia se usa el rango propio del nuevo ejercicio (laterales 12–20, plancha en segundos…).
+ * El descanso se conserva.
+ */
+export function targetForSwap(old: Target | undefined, alt: Exercise): Target | undefined {
+  if (!old) return undefined
+  if (old.goal === 'strength' && metricOf(alt) === 'reps') return old
+  return { ...defaultTarget('hypertrophy', undefined, alt), restSeconds: old.restSeconds }
+}
+
+/** Sustituye el ejercicio `ei` por `alt`, con sus series precargadas según su propio historial. */
+export function swapEntry(entries: ExerciseLog[], ei: number, alt: Exercise, history: Workout[], readiness?: Readiness): ExerciseLog[] {
+  const old = entries[ei]
+  const target = targetForSwap(old.target, alt)
+  const fresh = newEntry(alt, history, Math.max(1, old.sets.length), false, target, readiness)
+  return entries.map((e, i) => (i === ei ? { ...fresh, note: old.note } : e))
+}
+
+/** Sustituye también en la rutina (todas las apariciones del ejercicio). */
+export function swapInRoutine(routine: Routine, oldId: string, alt: Exercise): Routine {
+  return {
+    ...routine,
+    items: routine.items.map((i) => (i.exerciseId === oldId ? { ...i, exerciseId: alt.id, target: targetForSwap(i.target, alt) } : i)),
+  }
+}

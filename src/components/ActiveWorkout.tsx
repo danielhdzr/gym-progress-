@@ -4,7 +4,9 @@ import { useStore } from '../lib/store'
 import { fmtDuration } from '../lib/format'
 import { ExercisePicker } from './ExercisePicker'
 import { ExerciseCard } from './ExerciseCard'
-import { newEntry, patchSet } from '../lib/workout'
+import { newEntry, patchSet, swapEntry, swapInRoutine } from '../lib/workout'
+import { readinessInfo } from './BeginWorkout'
+import type { Exercise } from '../types'
 import { useDialog } from './Dialog'
 import { useRestTimer } from './RestTimer'
 
@@ -36,6 +38,33 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
     if (!set.done) rest.start(workout.entries[ei].target?.restSeconds)
   }
 
+  /** Cambia un ejercicio por otro; pregunta si también en la rutina y avisa si se pierden series hechas. */
+  const swap = async (ei: number, alt: Exercise) => {
+    const entry = workout.entries[ei]
+    if (entry.sets.some((s) => s.done)) {
+      const ok = await dialog.confirm({
+        message: 'Ya marcaste series de este ejercicio. Si lo cambias, esas series no se guardan. ¿Cambiar de todos modos?',
+        confirmLabel: 'Cambiar',
+        danger: true,
+      })
+      if (!ok) return
+    }
+    const routine = state.routines.find((r) => r.id === workout.routineId)
+    const inRoutine = routine?.items.some((i) => i.exerciseId === entry.exerciseId)
+    const alsoRoutine =
+      inRoutine &&
+      (await dialog.confirm({
+        message: `¿Usar ${alt.name} en lugar de ${state.exercises.find((e) => e.id === entry.exerciseId)?.name ?? 'este ejercicio'} solo hoy, o también en tu rutina “${routine!.name}”?`,
+        confirmLabel: 'También en la rutina',
+        cancelLabel: 'Solo hoy',
+      }))
+    update((s) => ({
+      ...s,
+      active: s.active ? { ...s.active, entries: swapEntry(s.active.entries, ei, alt, s.workouts, s.active.readiness) } : s.active,
+      routines: alsoRoutine ? s.routines.map((r) => (r.id === workout.routineId ? swapInRoutine(r, entry.exerciseId, alt) : r)) : s.routines,
+    }))
+  }
+
   const doneSets = workout.entries.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0)
 
   return (
@@ -43,7 +72,10 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
       <header className="workout-head">
         <div>
           <h1>{workout.name}</h1>
-          <span className="muted">{fmtDuration(now - new Date(workout.startedAt).getTime())} · {doneSets} series</span>
+          <span className="muted">
+            {fmtDuration(now - new Date(workout.startedAt).getTime())} · {doneSets} series
+            {readinessInfo(workout.readiness) && ` · ${readinessInfo(workout.readiness)!.emoji} ${readinessInfo(workout.readiness)!.label}`}
+          </span>
         </div>
         <button className="primary" onClick={onFinish}>Terminar</button>
       </header>
@@ -57,6 +89,8 @@ export function ActiveWorkout({ workout, onFinish, onDiscard }: Props) {
           mode="live"
           setEntries={setEntries}
           onToggle={(si) => toggleDone(ei, si)}
+          readiness={workout.readiness}
+          onSwap={(alt) => swap(ei, alt)}
         />
       ))}
 

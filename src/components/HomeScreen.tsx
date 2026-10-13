@@ -4,7 +4,7 @@ import { useStore } from '../lib/store'
 import { useNav } from '../lib/nav'
 import { greeting } from '../lib/motivation'
 import { dataLine, estimateMinutes, nextRoutine, routinePreview, weekDays, weekGoalMessage } from '../lib/home'
-import { startWorkout } from '../lib/workout'
+import { useBeginWorkout } from './BeginWorkout'
 import { cardioLabel, fmtDurationClock, timerElapsedMs } from '../lib/cardio'
 import { AmbienceHero, useAmbience } from './Ambience'
 import { NamePrompt } from './TrainScreen'
@@ -70,8 +70,9 @@ function QuickAction({ icon, label, onClick }: { icon: React.ReactNode; label: s
 
 /** "Hoy te toca": la siguiente rutina, o continuar lo que está en curso. */
 function TodayCard() {
-  const { state, update } = useStore()
+  const { state } = useStore()
   const nav = useNav()
+  const starter = useBeginWorkout()
   const timer = state.cardioTimer
 
   if (state.active) {
@@ -125,17 +126,12 @@ function TodayCard() {
           {routine.items.length} ejercicios · ~{estimateMinutes(routine, state.settings.restSeconds)} min
           {preview && <><br />{preview}</>}
         </p>
-        <button
-          className="primary full big"
-          onClick={() => {
-            update((s) => ({ ...s, active: startWorkout(routine, s.exercises, s.workouts) }))
-            nav.go('gym')
-          }}
-        >
+        <button className="primary full big" onClick={() => starter.begin(routine)}>
           <Play size={18} aria-hidden /> Empezar entreno
         </button>
         <button className="ghost full" onClick={() => nav.go('gym')}>Elegir otra rutina</button>
       </section>
+      {starter.sheet}
     </>
   )
 }

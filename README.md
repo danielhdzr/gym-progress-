@@ -85,3 +85,7 @@ src/
   lib/defaults.ts      # ejercicios y rutinas iniciales
   components/          # pantallas (Entrenar, Progreso, Historial, Ajustes)
 ```
+
+## Licencia
+
+© 2026 Daniel (danielhdzr). **Todos los derechos reservados.** La app se puede usar gratis para fines personales y no comerciales, y el código se puede consultar solo como referencia. No se permite copiarlo, modificarlo, redistribuirlo ni usarlo comercialmente sin autorización. Ver [LICENSE](LICENSE).

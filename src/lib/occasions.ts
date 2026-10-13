@@ -16,6 +16,7 @@ export const COUNTRIES: { code: CountryCode; name: string; flag: string; south: 
   { code: 'CL', name: 'Chile', flag: '🇨🇱', south: true },
   { code: 'PE', name: 'Perú', flag: '🇵🇪', south: true },
   { code: 'ES', name: 'España', flag: '🇪🇸', south: false },
+  { code: 'VE', name: 'Venezuela', flag: '🇻🇪', south: false },
 ]
 
 export const countryInfo = (c: CountryCode) => COUNTRIES.find((x) => x.code === c) ?? COUNTRIES[0]
@@ -281,6 +282,10 @@ export const HOLIDAYS: Holiday[] = [
   { id: 'ar-independence', emoji: '🇦🇷', palette: P.sky, countries: ['AR'], on: fixed(7, 9), messages: national('Día de la Independencia', '🇦🇷') },
   { id: 'cl-fiestas', emoji: '🇨🇱', palette: P.red, countries: ['CL'], on: fixed(9, 18), messages: national('Fiestas Patrias', '🇨🇱') },
   { id: 'pe-independence', emoji: '🇵🇪', palette: P.red, countries: ['PE'], on: fixed(7, 28), messages: national('Fiestas Patrias', '🇵🇪') },
+  // Venezuela
+  { id: 've-declaration', emoji: '🇻🇪', palette: P.yellow, countries: ['VE'], on: fixed(4, 19), messages: national('19 de Abril', '🇻🇪') },
+  { id: 've-carabobo', emoji: '🇻🇪', palette: P.sky, countries: ['VE'], on: fixed(6, 24), messages: national('Día de la Batalla de Carabobo', '🇻🇪') },
+  { id: 've-independence', emoji: '🇻🇪', palette: P.red, countries: ['VE'], on: fixed(7, 5), messages: national('Día de la Independencia', '🇻🇪') },
   { id: 'es-national', emoji: '🇪🇸', palette: P.yellow, countries: ['ES'], on: fixed(10, 12), messages: national('Día de la Fiesta Nacional', '🇪🇸') },
 ]
 

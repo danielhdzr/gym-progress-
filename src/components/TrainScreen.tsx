@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import type { Routine, Workout } from '../types'
 import { uid, useStore } from '../lib/store'
-import { finishWorkout, startWorkout } from '../lib/workout'
+import { finishWorkout } from '../lib/workout'
+import { useBeginWorkout } from './BeginWorkout'
 import { fmtDate, fmtDuration } from '../lib/format'
 import { ActiveWorkout } from './ActiveWorkout'
 import { RoutineEditor } from './RoutineEditor'
@@ -20,6 +21,7 @@ export function TrainScreen() {
   const rest = useRestTimer()
   const [editing, setEditing] = useState<Routine | null>(null)
   const [templates, setTemplates] = useState(false)
+  const starter = useBeginWorkout()
   const [summary, setSummary] = useState<{ workout: Workout; prs: string[] } | null>(null)
 
   const nameOf = (id: string) => state.exercises.find((e) => e.id === id)?.name ?? '—'
@@ -83,8 +85,7 @@ export function TrainScreen() {
   const { userName } = state.settings
   const finish = summary && finishMessage(userName, summary.prs.length, state.workouts.length)
 
-  const begin = (routine: Routine | null) =>
-    update((s) => ({ ...s, active: startWorkout(routine, s.exercises, s.workouts) }))
+  const { begin } = starter
 
   return (
     <div className="screen">
@@ -173,6 +174,7 @@ export function TrainScreen() {
       )}
 
       {templates && <TemplatesSheet onClose={() => setTemplates(false)} />}
+      {starter.sheet}
     </div>
   )
 }

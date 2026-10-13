@@ -1,4 +1,4 @@
-import type { Exercise, ItemGoal, Metric, SetLog, Target, Workout } from '../types'
+import type { Exercise, ItemGoal, Metric, Readiness, SetLog, Target, Workout } from '../types'
 import { fmtAmount, fmtRange, metricOf, stepFor } from './metric'
 
 /** 1RM estimado con la fórmula de Epley. Para ejercicios sin peso usamos las reps. */
@@ -113,7 +113,9 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
       reps: target,
       text:
         minReps >= ex.repMax
-          ? `Dominas el rango: agrega peso (+${ex.increment} kg) o busca ${A(target)}.`
+          ? ex.increment > 0
+            ? `Dominas el rango: agrega peso (+${ex.increment} kg) o busca ${A(target)}.`
+            : `Dominas el rango: pasa a una variante más difícil (o baja la asistencia) o busca ${A(target)}.`
           : `Busca ${A(target)} por serie (la última vez: ${A(minReps)}).`,
     }
   }
@@ -175,7 +177,40 @@ export function suggest(ex: Exercise, sessions: Session[], plannedSets: number):
  * Si nunca lo hiciste con ese objetivo pero sí con otro, estima el peso desde tu mejor 1RM
  * (al 90 % del peso teórico para esas reps, para empezar con margen).
  */
-export function suggestFor(ex: Exercise, target: Target | undefined, workouts: Workout[], plannedSets: number): Suggestion {
+export function suggestFor(
+  ex: Exercise,
+  target: Target | undefined,
+  workouts: Workout[],
+  plannedSets: number,
+  readiness?: Readiness,
+): Suggestion {
+  return adjustForReadiness(baseSuggestFor(ex, target, workouts, plannedSets), readiness, ex, target)
+}
+
+/**
+ * Ajuste por "¿Cómo llegas hoy?":
+ *  - Cansado: no sube el peso (si tocaba subir, repite el anterior al tope del rango).
+ *  - Día ligero: −10 % de peso.
+ *  (Quitar una serie se hace al crear el entreno.)
+ */
+export function adjustForReadiness(tip: Suggestion, readiness: Readiness | undefined, ex: Exercise, target?: Target): Suggestion {
+  const A = (n: number) => fmtAmount(n, metricOf(ex))
+  if (readiness === 'tired') {
+    if (tip.kind === 'up') {
+      const weight = Math.max(0, tip.weight - ex.increment)
+      const reps = target?.repMax ?? ex.repMax
+      return { kind: 'reps', weight, reps, text: `Hoy llegas cansado: repite ${weight} kg × ${A(reps)}, sin subir. Subes la próxima vez.` }
+    }
+    return { ...tip, text: `Hoy llegas cansado: no fuerces. ${tip.text}` }
+  }
+  if (readiness === 'light' && tip.weight > 0) {
+    const weight = Math.max(ex.increment || 0, roundTo(tip.weight * 0.9, ex.increment || 2.5))
+    return { ...tip, weight, text: `Día ligero: ${weight} kg × ${A(tip.reps)} (−10 %) para moverte sin desgaste.` }
+  }
+  return tip
+}
+
+function baseSuggestFor(ex: Exercise, target: Target | undefined, workouts: Workout[], plannedSets: number): Suggestion {
   const eff = target ? { ...ex, repMin: target.repMin, repMax: target.repMax } : ex
   const tip = suggest(eff, sessionsFor(ex.id, workouts, target?.goal), plannedSets)
   if (tip.kind !== 'new' || !target || metricOf(ex) !== 'reps') return tip

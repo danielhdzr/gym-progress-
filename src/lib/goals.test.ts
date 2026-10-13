@@ -102,3 +102,41 @@ describe('plantillas', () => {
     expect(recommendTemplates('cut', 3)[0].goal).toBe('cut')
   })
 })
+
+describe('¿Cómo llegas hoy?', () => {
+  const done = [w([[60, 12], [60, 12], [60, 12]], HYP)]
+
+  it('cansado: si tocaba subir, repite el peso anterior al tope del rango', () => {
+    expect(suggestFor(bench, HYP, done, 3)).toMatchObject({ kind: 'up', weight: 62.5 })
+    expect(suggestFor(bench, HYP, done, 3, 'tired')).toMatchObject({ kind: 'reps', weight: 60, reps: 12 })
+  })
+
+  it('día ligero: baja ~10 %', () => {
+    expect(suggestFor(bench, HYP, done, 3, 'light').weight).toBe(57.5)
+  })
+
+  it('con energía o normal no cambia nada', () => {
+    expect(suggestFor(bench, HYP, done, 3, 'great')).toEqual(suggestFor(bench, HYP, done, 3))
+  })
+
+  it('cansado o ligero: una serie menos al empezar', async () => {
+    const { startWorkout } = await import('./workout')
+    const routine = { id: 'r', name: 'R', items: [{ exerciseId: 'bench', sets: 3, target: HYP }] }
+    expect(startWorkout(routine, [bench], [], undefined, false, 'tired').entries[0].sets).toHaveLength(2)
+    expect(startWorkout(routine, [bench], [], undefined, false, 'normal').entries[0].sets).toHaveLength(3)
+  })
+})
+
+describe('sustituir ejercicios', () => {
+  it('fuerza conserva el esquema; hipertrofia usa el rango del nuevo ejercicio', async () => {
+    const { targetForSwap, swapInRoutine } = await import('./workout')
+    const { DEFAULT_EXERCISES: ALL } = await import('./defaults')
+    const dbBench = ALL.find((e) => e.id === 'db-bench')!
+    const plank = ALL.find((e) => e.id === 'plank')!
+    expect(targetForSwap(STRENGTH, dbBench)).toEqual(STRENGTH)
+    expect(targetForSwap(HYP, lateral)).toMatchObject({ goal: 'hypertrophy', repMin: 12, repMax: 20, restSeconds: 120 })
+    expect(targetForSwap(STRENGTH, plank)).toMatchObject({ goal: 'hypertrophy', repMin: 30, repMax: 60, restSeconds: 180 })
+    const r = swapInRoutine({ id: 'r', name: 'R', items: [{ exerciseId: 'bench', sets: 5, target: STRENGTH }] }, 'bench', dbBench)
+    expect(r.items[0]).toMatchObject({ exerciseId: 'db-bench', sets: 5, target: STRENGTH })
+  })
+})

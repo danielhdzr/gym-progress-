@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { AppState } from '../types'
 import { defaultState } from './defaults'
+import { normalizeName } from './library'
 
 const STORAGE_KEY = 'gym-progress-v1'
 
@@ -28,7 +29,8 @@ export function parseState(raw: string): AppState {
   }
   // Ejercicios nuevos de la lista base que no existían en datos anteriores
   const known = new Set(data.exercises.map((e) => e.id))
-  const exercises = [...data.exercises, ...base.exercises.filter((e) => !known.has(e.id))]
+  const knownNames = new Set(data.exercises.map((e) => normalizeName(e.name)))
+  const exercises = [...data.exercises, ...base.exercises.filter((e) => !known.has(e.id) && !knownNames.has(normalizeName(e.name)))]
   return { ...base, ...data, exercises, settings } as AppState
 }
 

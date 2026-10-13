@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import type { ExerciseLog, Workout } from '../types'
+import type { Exercise, ExerciseLog, Readiness, Workout } from '../types'
 import { useStore } from '../lib/store'
 import { isStalled, sessionsFor, suggestFor } from '../lib/progression'
 import { ITEM_GOAL_LABEL, fmtRest, fmtScheme } from '../lib/goals'
@@ -10,6 +10,9 @@ import { NumInput } from './NumInput'
 import { Help } from './Help'
 import { fmtSet, metricOf, unitHeader } from '../lib/metric'
 import { useDialog } from './Dialog'
+import { BookOpen, Repeat2, X } from 'lucide-react'
+import { TechniqueSheet } from './TechniqueSheet'
+import { SwapSheet } from './SwapSheet'
 
 type Entries = ExerciseLog[]
 
@@ -22,20 +25,25 @@ interface Props {
   mode: 'live' | 'log'
   setEntries: (fn: (entries: Entries) => Entries) => void
   onToggle?: (si: number) => void
+  /** Cómo llegó hoy el usuario (ajusta el texto de la sugerencia) */
+  readiness?: Readiness
+  /** Sustituir este ejercicio por otro (solo en el entreno en vivo) */
+  onSwap?: (replacement: Exercise) => void
 }
 
-export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle }: Props) {
+export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle, readiness, onSwap }: Props) {
   const { state } = useStore()
   const dialog = useDialog()
   const [showTools, setShowTools] = useState(false)
   const [showNote, setShowNote] = useState(!!entry.note)
+  const [sheet, setSheet] = useState<'technique' | 'swap' | null>(null)
   const ex = state.exercises.find((e) => e.id === entry.exerciseId)
   const sessions = useMemo(() => sessionsFor(entry.exerciseId, history), [entry.exerciseId, history])
   if (!ex) return null
 
   const live = mode === 'live'
   const metric = metricOf(ex)
-  const tip = suggestFor(ex, entry.target, history, entry.sets.length)
+  const tip = suggestFor(ex, entry.target, history, entry.sets.length, readiness)
   const last = sessions.at(-1)
   const stalled = live && isStalled(sessions, metric)
   const working = Math.max(0, ...entry.sets.map((s) => s.weight))
@@ -52,17 +60,39 @@ export function ExerciseCard({ entry, index, history, mode, setEntries, onToggle
             </span>
           )}
         </div>
-        <button
-          className="icon"
-          aria-label="Quitar ejercicio"
-          onClick={async () => {
-            if (await dialog.confirm({ message: `¿Quitar ${ex.name} del entreno?`, confirmLabel: 'Quitar', danger: true }))
-              setEntries((es) => removeEntry(es, index))
-          }}
-        >
-          ✕
-        </button>
+        <div className="card-tools">
+          <button className="icon-btn small-btn" onClick={() => setSheet('technique')} aria-label={`Técnica de ${ex.name}`} title="Técnica">
+            <BookOpen size={18} aria-hidden />
+          </button>
+          {onSwap && (
+            <button className="icon-btn small-btn" onClick={() => setSheet('swap')} aria-label={`Cambiar ${ex.name} por otro ejercicio`} title="Cambiar ejercicio">
+              <Repeat2 size={18} aria-hidden />
+            </button>
+          )}
+          <button
+            className="icon-btn small-btn"
+            aria-label="Quitar ejercicio"
+            title="Quitar"
+            onClick={async () => {
+              if (await dialog.confirm({ message: `¿Quitar ${ex.name} del entreno?`, confirmLabel: 'Quitar', danger: true }))
+                setEntries((es) => removeEntry(es, index))
+            }}
+          >
+            <X size={18} aria-hidden />
+          </button>
+        </div>
       </div>
+      {sheet === 'technique' && <TechniqueSheet ex={ex} onClose={() => setSheet(null)} />}
+      {sheet === 'swap' && onSwap && (
+        <SwapSheet
+          ex={ex}
+          onClose={() => setSheet(null)}
+          onPick={(alt) => {
+            setSheet(null)
+            onSwap(alt)
+          }}
+        />
+      )}
 
       {live && (
         <p className={`tip tip-${tip.kind}`}>

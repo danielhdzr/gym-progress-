@@ -25,14 +25,17 @@ export const ROUTINE_GOALS: { id: RoutineGoal; label: string; emoji: string; des
 export const routineGoalInfo = (g?: RoutineGoal) => ROUTINE_GOALS.find((x) => x.id === g)
 
 /** Objetivo por defecto de un ejercicio nuevo dentro de una rutina con ese objetivo general. */
-export function defaultTarget(goal: ItemGoal, routineGoal?: RoutineGoal, ex?: Exercise): Target {
+export function defaultTarget(requested: ItemGoal, routineGoal?: RoutineGoal, ex?: Exercise): Target {
+  // Tiempo o distancia (plancha, paseo del granjero) no tienen "fuerza 5×5": siempre su propio rango
+  const timed = !!ex && (ex.metric ?? 'reps') !== 'reps'
+  const goal: ItemGoal = timed ? 'hypertrophy' : requested
   const d = GOAL_DEFAULTS[goal]
-  // En hipertrofia respetamos el rango propio del ejercicio (laterales 12–20, pantorrillas 10–15…)
-  const own = goal === 'hypertrophy' && ex && (ex.metric ?? 'reps') === 'reps'
+  // En hipertrofia respetamos el rango propio del ejercicio (laterales 12–20, pantorrillas 10–15, plancha 30–60 s…)
+  const own = goal === 'hypertrophy' && !!ex
   return {
     goal,
-    repMin: own ? ex.repMin : d.repMin,
-    repMax: own ? ex.repMax : d.repMax,
+    repMin: own ? ex!.repMin : d.repMin,
+    repMax: own ? ex!.repMax : d.repMax,
     restSeconds: goal === 'hypertrophy' && routineGoal === 'cut' ? CUT_REST : d.restSeconds,
   }
 }

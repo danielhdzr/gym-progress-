@@ -69,8 +69,8 @@ export function RoutineEditor({ routine, onSave, onDelete, onClose }: Props) {
       goal,
       items: apply
         ? d.items.map((item, i) => {
-            const g = goalForNew(goal, i)
-            return { ...item, sets: GOAL_DEFAULTS[g].sets, target: defaultTarget(g, goal, exOf(item.exerciseId)) }
+            const target = defaultTarget(goalForNew(goal, i), goal, exOf(item.exerciseId))
+            return { ...item, sets: GOAL_DEFAULTS[target.goal].sets, target }
           })
         : d.items,
     }))
@@ -147,8 +147,8 @@ export function RoutineEditor({ routine, onSave, onDelete, onClose }: Props) {
         <ExercisePicker
           onClose={() => setPicking(false)}
           onPick={(ex) => {
-            const g = goalForNew(draft.goal, draft.items.length)
-            setItems((items) => [...items, { exerciseId: ex.id, sets: GOAL_DEFAULTS[g].sets, target: defaultTarget(g, draft.goal, ex) }])
+            const target = defaultTarget(goalForNew(draft.goal, draft.items.length), draft.goal, ex)
+            setItems((items) => [...items, { exerciseId: ex.id, sets: GOAL_DEFAULTS[target.goal].sets, target }])
             setOpen(draft.items.length)
             setPicking(false)
           }}

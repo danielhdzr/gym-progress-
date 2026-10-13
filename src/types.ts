@@ -12,6 +12,8 @@ export interface Exercise {
   increment: number
   /** Unidad de cada serie; sin definir = repeticiones (datos anteriores) */
   metric?: Metric
+  /** Notas de técnica propias del usuario */
+  cues?: string
 }
 
 /** Objetivo de un ejercicio dentro de una rutina. */
@@ -59,8 +61,12 @@ export interface ExerciseLog {
   target?: Target
 }
 
+/** "¿Cómo llegas hoy?": ajusta la sesión. */
+export type Readiness = 'great' | 'normal' | 'tired' | 'light'
+
 export interface Workout {
   id: string
+  readiness?: Readiness
   name: string
   routineId?: string
   startedAt: string
@@ -68,7 +74,7 @@ export interface Workout {
   entries: ExerciseLog[]
 }
 
-export type CountryCode = 'MX' | 'US' | 'CO' | 'AR' | 'CL' | 'PE' | 'ES'
+export type CountryCode = 'MX' | 'US' | 'CO' | 'AR' | 'CL' | 'PE' | 'ES' | 'VE'
 
 /** Objetivo elegido en la bienvenida */
 export type UserGoal = 'strength' | 'muscle' | 'cut' | 'cardio' | 'mixed'
@@ -80,6 +86,8 @@ export interface Settings {
   onboarded: boolean
   goal: UserGoal | null
   accent: AccentColor
+  /** Preguntar "¿Cómo llegas hoy?" al empezar un entreno */
+  readinessCheck: boolean
   /** Fecha (ISO) del último respaldo exportado, o "" */
   lastBackupAt: string
   /** País para festivos nacionales y hemisferio de las estaciones */
