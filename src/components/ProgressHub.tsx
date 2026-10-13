@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNav } from '../lib/nav'
 import { ProgressScreen } from './ProgressScreen'
 import { HistoryScreen } from './HistoryScreen'
+import { AchievementsGallery } from './Achievements'
 
 /** Progreso con dos vistas: gráficas/récords e historial de entrenos. */
 export function ProgressHub() {
@@ -12,7 +13,9 @@ export function ProgressHub() {
   useEffect(() => {
     consumeIntent()
   }, [consumeIntent])
-  const [view, setView] = useState<'charts' | 'history'>(intent === 'past-workout' || intent === 'history' ? 'history' : 'charts')
+  const [view, setView] = useState<'charts' | 'history' | 'achievements'>(
+    intent === 'past-workout' || intent === 'history' ? 'history' : intent === 'achievements' ? 'achievements' : 'charts',
+  )
 
   const header = (
     <header className="page-head">
@@ -24,10 +27,20 @@ export function ProgressHub() {
         <button role="tab" aria-selected={view === 'history'} className={view === 'history' ? 'on' : ''} onClick={() => setView('history')}>
           Historial
         </button>
+        <button role="tab" aria-selected={view === 'achievements'} className={view === 'achievements' ? 'on' : ''} onClick={() => setView('achievements')}>
+          Logros
+        </button>
       </div>
     </header>
   )
 
+  if (view === 'achievements')
+    return (
+      <div className="screen">
+        {header}
+        <AchievementsGallery />
+      </div>
+    )
   return view === 'charts' ? (
     <ProgressScreen header={header} focusRecords={intent === 'records'} />
   ) : (

@@ -10,6 +10,8 @@ import { AmbienceStyle } from './components/Ambience'
 import { DialogProvider } from './components/Dialog'
 import { RestTimerProvider } from './components/RestTimer'
 import { Onboarding } from './components/Onboarding'
+import { AchievementWatcher } from './components/Achievements'
+import { RoutineImporter } from './components/ShareRoutine'
 
 const TABS: { id: Tab; label: string; Icon: LucideIcon }[] = [
   { id: 'home', label: 'Inicio', Icon: House },
@@ -72,6 +74,8 @@ function Shell() {
       </main>
 
       {!state.settings.onboarded && <Onboarding />}
+      {state.settings.onboarded && <AchievementWatcher />}
+      <RoutineImporter />
 
       {/* Teléfono y tableta: menú inferior */}
       <nav className="tabbar" aria-label="Secciones">

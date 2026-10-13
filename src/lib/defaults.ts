@@ -133,6 +133,7 @@ export const DEFAULT_SETTINGS: Settings = {
   accent: 'lime',
   lastBackupAt: '',
   readinessCheck: true,
+  summariesSeen: [],
   country: 'MX',
   seasonalThemes: true,
   weeklyGoalDays: 3,
@@ -158,5 +159,6 @@ export function defaultState(): AppState {
     cardio: [],
     cardioTimer: null,
     cardioGoalKm: 0,
+    achievementsSeen: null,
   }
 }

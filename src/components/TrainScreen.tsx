@@ -13,7 +13,8 @@ import { fmtKcal, workoutKcal } from '../lib/calories'
 import { fmtScheme, itemTarget, routineGoalInfo } from '../lib/goals'
 import { metricOf } from '../lib/metric'
 import { TemplatesSheet } from './Templates'
-import { Dumbbell, LayoutTemplate, Plus, Zap } from 'lucide-react'
+import { Dumbbell, LayoutTemplate, Plus, Share2, Zap } from 'lucide-react'
+import { ShareRoutineSheet } from './ShareRoutine'
 
 export function TrainScreen() {
   const { state, update } = useStore()
@@ -21,6 +22,7 @@ export function TrainScreen() {
   const rest = useRestTimer()
   const [editing, setEditing] = useState<Routine | null>(null)
   const [templates, setTemplates] = useState(false)
+  const [sharing, setSharing] = useState<Routine | null>(null)
   const starter = useBeginWorkout()
   const [summary, setSummary] = useState<{ workout: Workout; prs: string[] } | null>(null)
 
@@ -138,7 +140,12 @@ export function TrainScreen() {
                 {lastByRoutine.has(r.id) ? `Último: ${fmtDate(lastByRoutine.get(r.id)!)}` : 'Aún no la haces'}
               </span>
             </div>
-            <button className="ghost" onClick={() => setEditing(r)}>Editar</button>
+            <div className="card-tools">
+              <button className="icon-btn small-btn" onClick={() => setSharing(r)} aria-label={`Compartir ${r.name}`} title="Compartir">
+                <Share2 size={18} aria-hidden />
+              </button>
+              <button className="ghost" onClick={() => setEditing(r)}>Editar</button>
+            </div>
           </div>
           {r.goal && <span className={`goal-badge ${r.goal}`}>{routineGoalInfo(r.goal)?.emoji} {routineGoalInfo(r.goal)?.label}</span>}
           <ul className="routine-items">
@@ -175,6 +182,7 @@ export function TrainScreen() {
 
       {templates && <TemplatesSheet onClose={() => setTemplates(false)} />}
       {starter.sheet}
+      {sharing && <ShareRoutineSheet routine={sharing} onClose={() => setSharing(null)} />}
     </div>
   )
 }

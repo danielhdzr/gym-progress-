@@ -88,6 +88,8 @@ export interface Settings {
   accent: AccentColor
   /** Preguntar "¿Cómo llegas hoy?" al empezar un entreno */
   readinessCheck: boolean
+  /** Resúmenes ya vistos o descartados en Inicio ("2026-09", "2026") */
+  summariesSeen: string[]
   /** Fecha (ISO) del último respaldo exportado, o "" */
   lastBackupAt: string
   /** País para festivos nacionales y hemisferio de las estaciones */
@@ -153,4 +155,6 @@ export interface AppState {
   cardioTimer: CardioTimer | null
   /** Meta semanal de km (0 = sin meta) */
   cardioGoalKm: number
+  /** Logros ya notificados (null = aún no se inicializa: los existentes se marcan sin aviso) */
+  achievementsSeen: string[] | null
 }

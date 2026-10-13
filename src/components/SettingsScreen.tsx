@@ -31,7 +31,7 @@ type Section = 'profile' | 'training' | 'equipment' | 'exercises' | 'appearance'
 
 const GUIDE_URL = 'https://github.com/danielhdzr/gym-progress-/blob/main/GUIA-DE-USO.md'
 const REPO_URL = 'https://github.com/danielhdzr/gym-progress-'
-const VERSION = 'v1.2'
+const VERSION = 'v1.3'
 
 const GOAL_LABELS: Record<UserGoal, string> = {
   strength: 'Ganar fuerza',

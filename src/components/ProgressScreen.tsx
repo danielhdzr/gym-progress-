@@ -8,7 +8,8 @@ import type { Metric } from '../types'
 import { BodyweightCard } from './BodyweightCard'
 import { Help } from './Help'
 import { useNav } from '../lib/nav'
-import { ChartLine } from 'lucide-react'
+import { BarChart3, ChartLine } from 'lucide-react'
+import { SummarySheet } from './SummarySheet'
 
 /** Rango orientativo de series semanales por músculo para hipertrofia. */
 const TARGET_MIN = 10
@@ -32,6 +33,7 @@ export function ProgressScreen({ header, focusRecords = false }: { header?: Reac
   const { state } = useStore()
   const recordsRef = useRef<HTMLElement>(null)
   const nav = useNav()
+  const [summaryOpen, setSummaryOpen] = useState(false)
 
   useEffect(() => {
     if (focusRecords) recordsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -80,6 +82,11 @@ export function ProgressScreen({ header, focusRecords = false }: { header?: Reac
   return (
     <div className="screen">
       {header}
+
+      <button className="secondary full" onClick={() => setSummaryOpen(true)}>
+        <BarChart3 size={18} aria-hidden /> Ver resumen del mes o del año
+      </button>
+      {summaryOpen && <SummarySheet onClose={() => setSummaryOpen(false)} />}
 
       <section className="card" ref={recordsRef}>
         <h3>🏆 Récords personales</h3>

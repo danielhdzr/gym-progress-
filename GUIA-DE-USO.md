@@ -160,6 +160,19 @@ Con el RPE, las sugerencias son más inteligentes:
 - Si llegaste a la meta de reps pero **al fallo (RPE 10)**, la app te pide repetir ese peso antes de subir.
 - Si **todo se sintió fácil (RPE 7 o menos)**, te pide subir más rápido (+2 reps).
 
+### 🔋 "¿Cómo llegas hoy?"
+Al empezar una rutina eliges cómo llegas:
+- 💪 **Con energía** o 🙂 **Normal:** sugerencias normales.
+- 😴 **Cansado o dormí mal:** no sube el peso y hace 1 serie menos.
+- 🤕 **Día ligero:** −10 % de peso y 1 serie menos.
+
+Si no quieres que pregunte, desactívalo en **Ajustes → Entrenamiento**.
+
+### 📖 Técnica y 🔄 cambiar ejercicio
+En cada ejercicio del entreno hay dos íconos arriba a la derecha:
+- **📖 Técnica:** puntos clave y errores comunes, más tus propias notas.
+- **🔄 Cambiar:** alternativas que trabajan el mismo movimiento (por ejemplo, si la máquina está ocupada). Eliges si el cambio es **solo hoy** o **también en tu rutina**. La app sugiere el peso con tu historial de ese ejercicio.
+
 ### Usa las herramientas de cada ejercicio
 - **🔥 Discos:** te muestra las **series de calentamiento** recomendadas y **qué discos poner de cada lado** de la barra. Configura tu barra y los discos de tu gym en **Ajustes → Barra y discos**.
 - **📝 Nota:** anota cualquier cosa ("molestia en el hombro", "agarre cerrado"). La verás la próxima vez junto a "Última vez".
@@ -190,6 +203,15 @@ En **Inicio** toca **"Anotar entreno pasado"** (o ve a **Progreso → Historial 
 
 ### ¿Te equivocaste al anotar?
 En **Progreso → Historial**, abre el entreno y toca **"Editar"**. Corrige errores lo antes posible: un dato equivocado (por ejemplo, 600 kg en vez de 60) afecta las sugerencias siguientes.
+
+### 🏅 Logros
+En **Progreso → Logros** hay 24 logros de constancia, fuerza, cardio y fechas especiales. Los que ya ganaste con tu historial aparecen desbloqueados, y cuando ganas uno nuevo aparece un aviso. Los bloqueados te dicen cuánto falta.
+
+### 📊 Resumen del mes y del año
+Del 1 al 5 de cada mes aparece en **Inicio** tu resumen del mes anterior (y a fin de año, el del año). También lo ves siempre en **Progreso → "Ver resumen"**. Con **"Compartir imagen"** se genera una imagen lista para WhatsApp o Instagram.
+
+### 🔗 Compartir rutinas
+En **Pesas**, toca el ícono de compartir de una rutina: aparece un **código QR** y un **enlace**. Quien lo abra puede importarla con un toque; si usa ejercicios que creaste tú, se incluyen. No se usa ningún servidor ni cuenta.
 
 ### Revisa tu progreso cada semana
 En **Progreso** verás:

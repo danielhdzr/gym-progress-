@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useState, type ReactNode } from
 export type Tab = 'home' | 'gym' | 'cardio' | 'progress'
 
 /** Acción pendiente que la pantalla destino ejecuta al abrirse (p. ej. abrir "entreno pasado"). */
-export type Intent = 'past-workout' | 'records' | 'history' | null
+export type Intent = 'past-workout' | 'records' | 'history' | 'achievements' | 'summary' | null
 
 interface Nav {
   tab: Tab

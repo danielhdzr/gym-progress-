@@ -9,6 +9,8 @@ import { cardioLabel, fmtDurationClock, timerElapsedMs } from '../lib/cardio'
 import { AmbienceHero, useAmbience } from './Ambience'
 import { NamePrompt } from './TrainScreen'
 import { BodyweightCard } from './BodyweightCard'
+import { SummarySheet } from './SummarySheet'
+import { hasActivity, monthRange, periodSummary, summaryOffer, yearRange } from '../lib/summary'
 
 export function HomeScreen() {
   const { state } = useStore()
@@ -26,6 +28,7 @@ export function HomeScreen() {
       />
 
       {!namePrompted && <NamePrompt />}
+      <SummaryOffer />
 
       <div className="home-grid">
         <div className="home-main">
@@ -187,5 +190,42 @@ function WeekCard() {
       </div>
       )}
     </section>
+  )
+}
+
+/** Del 1 al 5 de cada mes (y en fin de año): "Tu resumen de septiembre está listo". */
+function SummaryOffer() {
+  const { state, update } = useStore()
+  const ambience = useAmbience()
+  const [open, setOpen] = useState(false)
+  const offer = summaryOffer(ambience.now)
+  if (!offer || state.settings.summariesSeen.includes(offer.key)) return null
+  const range = offer.kind === 'month' ? monthRange(offer.year, offer.month0) : yearRange(offer.year)
+  const s = periodSummary(state, range)
+  if (!hasActivity(s)) return null
+  const markSeen = () => update((st) => ({ ...st, settings: { ...st.settings, summariesSeen: [...st.settings.summariesSeen, offer.key] } }))
+
+  return (
+    <>
+      <section className="card summary-offer">
+        <div className="card-head">
+          <div>
+            <span className="eyebrow">📊 {offer.kind === 'year' ? 'Tu año en Gym Progress' : 'Resumen del mes'}</span>
+            <h3>{range.label}: {s.workouts} entrenos{s.prs ? ` y ${s.prs} récords` : ''}</h3>
+          </div>
+          <button className="icon-btn small-btn" onClick={markSeen} aria-label="Descartar resumen"><X size={18} aria-hidden /></button>
+        </div>
+        <button className="primary" onClick={() => setOpen(true)}>Ver y compartir</button>
+      </section>
+      {open && (
+        <SummarySheet
+          initial={offer}
+          onClose={() => {
+            setOpen(false)
+            markSeen()
+          }}
+        />
+      )}
+    </>
   )
 }
